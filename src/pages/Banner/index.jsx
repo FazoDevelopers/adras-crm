@@ -50,6 +50,7 @@ const index = () => {
     data.append("text", values.text);
     data.append("image", image);
     if (!image) data.delete("image");
+    if (!values.text) data.delete("text");
     try {
       let response = await axios.post(
         `/admin/${localStorage.getItem("adras-token")}/main-page-news/${

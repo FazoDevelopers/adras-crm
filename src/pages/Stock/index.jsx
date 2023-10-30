@@ -49,9 +49,14 @@ const index = () => {
   async function handleEdit(values) {
     setLoading(true);
     let data = new FormData();
+    data.append("title", values.title);
     data.append("text", values.text);
+    data.append("time", values.time);
     data.append("image", image);
     if (!image) data.delete("image");
+    if (!values.text) data.delete("text");
+    if (!values.title) data.delete("title");
+    if (!values.time) data.delete("time");
     try {
       let response = await axios.post(
         `/admin/${localStorage.getItem("adras-token")}/news/${
