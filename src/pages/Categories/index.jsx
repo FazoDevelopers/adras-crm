@@ -52,7 +52,9 @@ const index = () => {
     data.append("name", values.name);
     data.append("image", image);
     data.append("image_2", image2);
+    if (!values.name) data.delete("name");
     if (!image) data.delete("image");
+    if (!image2) data.delete("image_2");
     try {
       let response = await axios.post(
         `/admin/${localStorage.getItem("adras-token")}/parent-category/${

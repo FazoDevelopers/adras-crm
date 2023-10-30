@@ -123,6 +123,7 @@ const App = () => {
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/categories" element={<Categories />} />
+                <Route path="/*" element={<Categories />} />
                 <Route path="/subcategories" element={<Subcategories />} />
                 <Route path="/products" element={<Products />} />
                 <Route path="/discount" element={<StockProducts />} />

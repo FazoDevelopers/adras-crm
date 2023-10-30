@@ -63,6 +63,9 @@ const index = () => {
     data.append("image_2", image2);
     data.append("parent_id", values.parent_id);
     if (!image) data.delete("image");
+    if (!image2) data.delete("image_2");
+    if (!values.name) data.delete("name");
+    if (!values.parent_id) data.delete("parent_id");
     try {
       let response = await axios.post(
         `/admin/${localStorage.getItem("adras-token")}/child-category/${
@@ -318,15 +321,13 @@ const index = () => {
           <Form.Item label="Ikon rasmi" name="image">
             <input
               type="file"
-              name="image"
               className="file:bg-transparent file:border-none w-full border rounded border-blue-500 p-2"
               onChange={(e) => setImage(e.target.files[0])}
             />
           </Form.Item>
-          <Form.Item label="banner rasmi" name="image">
+          <Form.Item label="banner rasmi" name="image_2">
             <input
               type="file"
-              name="image"
               className="file:bg-transparent file:border-none w-full border rounded border-blue-500 p-2"
               onChange={(e) => setImage2(e.target.files[0])}
             />
