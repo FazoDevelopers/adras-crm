@@ -2,7 +2,6 @@ import axios from "axios";
 import { Button, Checkbox, Form, Input } from "antd";
 
 const App = () => {
-    
   const onFinish = async (values) => {
     try {
       let response = await axios.post("admin/login", values);
@@ -11,7 +10,7 @@ const App = () => {
           "adras-token",
           response?.data?.data?.remember_token
         );
-        window.location.replace("/categories");
+        window.location.replace("/admin");
       }
     } catch (error) {
       return;

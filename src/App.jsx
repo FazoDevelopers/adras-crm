@@ -13,11 +13,19 @@ import {
   StockProducts,
   Subcategories,
 } from "./pages";
+import {
+  Home as LandingHome,
+  Category as LandingCategory,
+  Subcategory as LandingSubcategory,
+  BuyProduct as LandingBuyProduct,
+} from "./landing";
+
 const { Header, Sider, Content } = Layout;
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
+  const [adminBlock, setAdminBlock] = useState(false);
   const navigate = useNavigate();
   const {
     token: { colorBgContainer },
@@ -26,15 +34,24 @@ const App = () => {
   useEffect(() => {
     let token = localStorage.getItem("adras-token");
     if (token) setIsLoggedIn(true);
-  }, []);
+    if (isLoggedIn === false && window.location.pathname.startsWith("/admin")) {
+      setAdminBlock(true);
+    } else {
+      setAdminBlock(false);
+    }
+  }, [window.location.pathname, adminBlock]);
+
+  if (adminBlock) {
+    return <Login />;
+  }
 
   return (
     <>
-      {isLoggedIn ? (
+      {window.location.pathname.startsWith("/admin") ? (
         <Layout className="min-h-screen">
           <Sider trigger={null} collapsible collapsed={collapsed}>
-            <div className="grid place-items-center">
-              <img src="logo.png" alt="logo" className="w-[150px]" />
+            <div className="grid place-items-center bg-white m-2 rounded-lg">
+              <img src="../logo.png" alt="logo" className="w-[150px]" />
             </div>
             <Menu
               theme="dark"
@@ -45,55 +62,55 @@ const App = () => {
                 //   key: "1",
                 //   icon: <span className="fa-solid fa-home" />,
                 //   label: "Bosh sahifa",
-                //   onClick: () => navigate("/"),
+                //   onClick: () => navigate("/admin/"),
                 // },
                 {
                   key: "2",
                   icon: <span className="fa-solid fa-box" />,
                   label: "Kategoriyalar",
-                  onClick: () => navigate("/categories"),
+                  onClick: () => navigate("/admin/categories"),
                 },
                 {
                   key: "3",
                   icon: <span className="fa-solid fa-boxes-stacked" />,
                   label: "Subkategoriyalar",
-                  onClick: () => navigate("/subcategories"),
+                  onClick: () => navigate("/admin/subcategories"),
                 },
                 {
                   key: "5",
                   icon: <span className="fa-solid fa-bullseye" />,
                   label: "Mahsulotlar",
-                  onClick: () => navigate("/products"),
+                  onClick: () => navigate("/admin/products"),
                 },
                 {
                   key: "7",
                   icon: <span className="fa-solid fa-ticket" />,
                   label: "Chegirma",
-                  onClick: () => navigate("/discount"),
+                  onClick: () => navigate("/admin/discount"),
                 },
                 {
                   key: "4",
                   icon: <span className="fa-solid fa-newspaper" />,
                   label: "Banner",
-                  onClick: () => navigate("/banner"),
+                  onClick: () => navigate("/admin/banner"),
                 },
                 {
                   key: "6",
                   icon: <span className="fa-solid fa-newspaper" />,
                   label: "Aksiya banner",
-                  onClick: () => navigate("/stock"),
+                  onClick: () => navigate("/admin/stock"),
                 },
                 {
                   key: "8",
                   icon: <span className="fa-solid fa-bell-concierge" />,
                   label: "Buyurtmalar",
-                  onClick: () => navigate("/orders"),
+                  onClick: () => navigate("/admin/orders"),
                 },
                 {
                   key: "9",
                   icon: <span className="fa-solid fa-truck" />,
                   label: "Yetkazib berish",
-                  onClick: () => navigate("/delivery"),
+                  onClick: () => navigate("/admin/delivery"),
                 },
               ]}
             />
@@ -135,22 +152,31 @@ const App = () => {
             </Header>
             <Content className="p-5">
               <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/categories" element={<Categories />} />
-                <Route path="/*" element={<Categories />} />
-                <Route path="/subcategories" element={<Subcategories />} />
-                <Route path="/products" element={<Products />} />
-                <Route path="/discount" element={<StockProducts />} />
-                <Route path="/banner" element={<Banner />} />
-                <Route path="/stock" element={<Stock />} />
-                <Route path="/orders" element={<Orders />} />
-                <Route path="/delivery" element={<Delivery />} />
+                {/* <Route path="/" element={<Home />} /> */}
+                <Route path="/admin" element={<Categories />} />
+                <Route path="/admin/categories" element={<Categories />} />
+                <Route path="/admin/*" element={<Categories />} />
+                <Route
+                  path="/admin/subcategories"
+                  element={<Subcategories />}
+                />
+                <Route path="/admin/products" element={<Products />} />
+                <Route path="/admin/discount" element={<StockProducts />} />
+                <Route path="/admin/banner" element={<Banner />} />
+                <Route path="/admin/stock" element={<Stock />} />
+                <Route path="/admin/orders" element={<Orders />} />
+                <Route path="/admin/delivery" element={<Delivery />} />
               </Routes>
             </Content>
           </Layout>
         </Layout>
       ) : (
-        <Login />
+        <Routes>
+          <Route path="/" element={<LandingHome />} />
+          <Route path="/category/:id" element={<LandingCategory />} />
+          <Route path="/subcategory/:id" element={<LandingSubcategory />} />
+          <Route path="/buy/:product" element={<LandingBuyProduct />} />
+        </Routes>
       )}
     </>
   );

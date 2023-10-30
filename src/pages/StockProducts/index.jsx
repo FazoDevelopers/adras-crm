@@ -8,6 +8,7 @@ const index = () => {
   const [loading, setLoading] = useState(false);
   const [modalData, setModalData] = useState();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   async function getData() {
@@ -49,6 +50,7 @@ const index = () => {
       );
       if (response.status === 201) {
         getData();
+        setIsAddModalOpen(false);
         setLoading(false);
       }
     } catch (error) {
@@ -98,102 +100,119 @@ const index = () => {
 
   return (
     <div>
-      <details>
-        <summary className="text-3xl font-semibold mb-3">
-          Yangi chegirma qo'shish:
-        </summary>
-        <Form
-          name="search"
-          onFinish={searchProduct}
-          className="flex items-center w-full"
+      {/* add */}
+      <div>
+        <Button
+          type="primary"
+          className="bg-blue-500"
+          icon={<span className="fa-solid fa-plus" />}
+          onClick={() => setIsAddModalOpen(true)}
         >
-          <Form.Item
-            label="Mahsulotlarni qidirish"
-            name="q"
-            className="w-full"
-            rules={[
-              {
-                required: true,
-                message: "",
-              },
-            ]}
+          Yangi chegirma qo'shish
+        </Button>
+        <Modal
+          title="Chegirma qo'shish"
+          open={isAddModalOpen}
+          onCancel={() => setIsAddModalOpen(false)}
+          footer={[]}
+        >
+          <Form
+            name="search"
+            onFinish={searchProduct}
+            className="flex items-center w-full"
           >
-            <Input className="border rounded border-blue-500 " />
-          </Form.Item>
-          <Form.Item>
-            <Button type="primary" htmlType="submit" className="bg-blue-500">
-              Izlash
-            </Button>
-          </Form.Item>
-        </Form>
-        <Form name="basic" onFinish={handleCreate} autoComplete="off">
-          <Form.Item
-            label="Narxi"
-            name="amount"
-            rules={[
-              {
-                required: true,
-                message: "",
-              },
-            ]}
-          >
-            <Input
-              type="number"
-              className="border rounded border-blue-500 p-2"
-            />
-          </Form.Item>
-          <Form.Item
-            label="Mahsulot"
-            name={"product_slug"}
-            rules={[
-              {
-                required: true,
-                message: " ",
-              },
-            ]}
-          >
-            <Radio.Group>
-              {products?.map?.((item) => (
-                <Radio value={item?.slug}>{item?.name}</Radio>
-              ))}
-            </Radio.Group>
-          </Form.Item>
-          <Form.Item
-            label="Boshlanish vaqti"
-            name="start_time"
-            rules={[
-              {
-                required: true,
-                message: "",
-              },
-            ]}
-          >
-            <DatePicker className="w-full border rounded border-blue-500 p-2" />
-          </Form.Item>
-          <Form.Item
-            label="Tugash vaqti"
-            name="end_time"
-            rules={[
-              {
-                required: true,
-                message: "",
-              },
-            ]}
-          >
-            <DatePicker className="w-full border rounded border-blue-500 p-2" />
-          </Form.Item>
-          <Form.Item>
-            <Button
-              loading={loading}
-              type="primary"
-              htmlType="submit"
-              className="bg-blue-500"
+            <Form.Item
+              label="Mahsulotlarni qidirish"
+              name="q"
+              className="w-full"
+              rules={[
+                {
+                  required: true,
+                  message: "",
+                },
+              ]}
             >
-              Submit
-            </Button>
-          </Form.Item>
-        </Form>
-      </details>
+              <Input className="border rounded border-blue-500 " />
+            </Form.Item>
+            <Form.Item>
+              <Button type="primary" htmlType="submit" className="bg-blue-500">
+                Izlash
+              </Button>
+            </Form.Item>
+          </Form>
+          <Form name="basic" onFinish={handleCreate} autoComplete="off">
+            <Form.Item
+              label="Narxi"
+              name="amount"
+              rules={[
+                {
+                  required: true,
+                  message: "",
+                },
+              ]}
+            >
+              <Input
+                type="number"
+                className="border rounded border-blue-500 p-2"
+              />
+            </Form.Item>
+            <Form.Item
+              label="Mahsulot"
+              name={"product_slug"}
+              rules={[
+                {
+                  required: true,
+                  message: " ",
+                },
+              ]}
+            >
+              {products?.length > 0 ? (
+                <Radio.Group>
+                  {products?.map?.((item) => (
+                    <Radio value={item?.slug}>{item?.name}</Radio>
+                  ))}
+                </Radio.Group>
+              ) : (
+                "Mahsulot yo'q"
+              )}
+            </Form.Item>
+            <Form.Item
+              label="Boshlanish vaqti"
+              name="start_time"
+              rules={[
+                {
+                  required: true,
+                  message: "",
+                },
+              ]}
+            >
+              <DatePicker className="w-full border rounded border-blue-500 p-2" />
+            </Form.Item>
+            <Form.Item
+              label="Tugash vaqti"
+              name="end_time"
+              rules={[
+                {
+                  required: true,
+                  message: "",
+                },
+              ]}
+            >
+              <DatePicker className="w-full border rounded border-blue-500 p-2" />
+            </Form.Item>
+            <Form.Item>
+              <Button
+                loading={loading}
+                type="primary"
+                htmlType="submit"
+                className="bg-blue-500"
+              >
+                Submit
+              </Button>
+            </Form.Item>
+          </Form>
+        </Modal>
+      </div>
       <div>
         <table className="w-full">
           <thead>
@@ -210,10 +229,10 @@ const index = () => {
             {data?.map?.((item, ind) => (
               <tr key={ind} className="text-center border-t">
                 <th className="py-3">{ind + 1}</th>
-                <th>{item?.product_slug}</th>
-                <th>{item?.amount}</th>
-                <th>{item?.start_time.slice(0, 10)}</th>
-                <th>{item?.end_time.slice(0, 10)}</th>
+                <td>{item?.product_slug}</td>
+                <td>{item?.amount}</td>
+                <td>{item?.start_time.slice(0, 10)}</td>
+                <td>{item?.end_time.slice(0, 10)}</td>
                 <td className="w-52">
                   <div className="flex items-center flex-wrap gap-3">
                     <Button

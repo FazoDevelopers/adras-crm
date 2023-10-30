@@ -1,0 +1,16 @@
+.category-image-see-more {
+  transition: all 0.3s;
+}
+.category-image-wrapper:hover
+  > .category-main-image
+  > .category-image-see-more {
+  text-decoration: underline;
+  transform: scale(1.2) translateX(-5%);
+}
+.category-image-wrapper:hover
+  > .category-main-image
+  > .category-image-see-more
+  .fa-chevron-right {
+  transform: translateX(100%);
+}
+

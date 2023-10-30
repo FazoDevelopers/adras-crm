@@ -104,7 +104,13 @@ const index = () => {
           <h4 className="text-lg font-medium">
             Hozirgi yetkazib berish narxi:
           </h4>
-          <p>UZS {data?.[data?.length - 1]?.price}</p>
+          <p className="font-semibold text-blue-700">UZS {data?.[data?.length - 1]?.price}</p>
+        </div>
+        <div className="flex items-center gap-5">
+          <h4 className="text-lg font-medium">
+            Tayinlangan sana:
+          </h4>
+          <p>{data?.[data?.length - 1]?.created_at?.slice?.(0,10)}</p>
         </div>
       </div>
     </div>

@@ -11,6 +11,7 @@ const index = () => {
   const [image2, setImage2] = useState();
   const [loading, setLoading] = useState(false);
   const [modalData, setModalData] = useState();
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
@@ -47,10 +48,11 @@ const index = () => {
       if (response.status === 201) {
         getData();
         setImage(null);
+        setImage2(null);
+        setIsAddModalOpen(false);
         setLoading(false);
       }
     } catch (error) {
-      setImage(null);
       setLoading(false);
     }
   }
@@ -95,93 +97,108 @@ const index = () => {
       return;
     }
   }
-  
+
   return (
     <div>
-      <details>
-        <summary className="text-3xl font-semibold mb-3">
-          Yangi subkategoriya qo'shish:
-        </summary>
-        <Form name="form" onFinish={handleCreate} autoComplete="off">
-          <Form.Item
-            label="Nomi"
-            name="name"
-            rules={[
-              {
-                required: true,
-                message: "",
-              },
-            ]}
-          >
-            <Input className="border rounded border-blue-500 p-2" />
-          </Form.Item>
-          <Form.Item
-            label="Kategoriya"
-            name="parent_id"
-            rules={[
-              {
-                required: true,
-                message: "",
-              },
-            ]}
-          >
-            <Select
-              type="file"
-              className="w-full border rounded-lg border-blue-500"
+      {/* add */}
+      <div>
+        <Button
+          type="primary"
+          className="bg-blue-500"
+          icon={<span className="fa-solid fa-plus" />}
+          onClick={() => setIsAddModalOpen(true)}
+        >
+          Yangi subkategoriya qo'shish
+        </Button>
+        <Modal
+          title="Subkategoriya qo'shish"
+          open={isAddModalOpen}
+          onCancel={() => setIsAddModalOpen(false)}
+          footer={[]}
+        >
+          <Form name="form" onFinish={handleCreate} autoComplete="off">
+            <Form.Item
+              label="Nomi"
+              name="name"
+              rules={[
+                {
+                  required: true,
+                  message: "",
+                },
+              ]}
             >
-              {data?.categories?.map?.((item, ind) => (
-                <option key={ind} value={item?.id}>
-                  {item?.name}
-                </option>
-              ))}
-            </Select>
-          </Form.Item>
-          <Form.Item
-            label="Ikon rasmi"
-            name="image"
-            rules={[
-              {
-                required: true,
-                message: "",
-              },
-            ]}
-          >
-            <input
-              type="file"
+              <Input className="border rounded border-blue-500 p-2" />
+            </Form.Item>
+            <Form.Item
+              label="Kategoriya"
+              name="parent_id"
+              rules={[
+                {
+                  required: true,
+                  message: "",
+                },
+              ]}
+            >
+              <Select
+                type="file"
+                className="w-full border rounded-lg border-blue-500"
+              >
+                {data?.categories?.map?.((item, ind) => (
+                  <option key={ind} value={item?.id}>
+                    {item?.name}
+                  </option>
+                ))}
+              </Select>
+            </Form.Item>
+            <Form.Item
+              label="Ikon rasmi"
               name="image"
-              className="file:bg-transparent file:border-none w-full border rounded border-blue-500 p-2"
-              onChange={(e) => setImage(e.target.files[0])}
-            />
-          </Form.Item>
-          <Form.Item
-            label="Banner rasmi"
-            name="image_2"
-            rules={[
-              {
-                required: true,
-                message: "",
-              },
-            ]}
-          >
-            <input
-              type="file"
-              name="image_2"
-              className="file:bg-transparent file:border-none w-full border rounded border-blue-500 p-2"
-              onChange={(e) => setImage2(e.target.files[0])}
-            />
-          </Form.Item>
-          <Form.Item>
-            <Button
-              loading={loading}
-              type="primary"
-              htmlType="submit"
-              className="bg-blue-500"
+              rules={[
+                {
+                  required: true,
+                  message: "",
+                },
+              ]}
             >
-              Submit
-            </Button>
-          </Form.Item>
-        </Form>
-      </details>
+              <input
+                type="file"
+                name="image"
+                className="file:bg-transparent file:border-none w-full border rounded border-blue-500 p-2"
+                onChange={(e) => setImage(e.target.files[0])}
+              />
+            </Form.Item>
+            <Form.Item
+              label="Banner rasmi"
+              name="image_2"
+              rules={[
+                {
+                  required: true,
+                  message: "",
+                },
+              ]}
+            >
+              <input
+                type="file"
+                name="image_2"
+                className="file:bg-transparent file:border-none w-full border rounded border-blue-500 p-2"
+                onChange={(e) => setImage2(e.target.files[0])}
+              />
+            </Form.Item>
+            <Form.Item>
+              <Button
+                loading={loading}
+                type="primary"
+                htmlType="submit"
+                className="bg-blue-500"
+              >
+                Submit
+              </Button>
+            </Form.Item>
+          </Form>
+        </Modal>
+      </div>
+
+      {/* table */}
       <div>
         <table className="w-full">
           <thead>
@@ -197,7 +214,7 @@ const index = () => {
             {data?.subcategories?.map?.((item, ind) => (
               <tr key={ind} className="text-center border-t">
                 <th className="py-3">{ind + 1}</th>
-                <th>{item?.name}</th>
+                <td>{item?.name}</td>
                 <td className="text-center">
                   <img
                     src={`https://api.abdullajonov.uz/adras-market-api/public/storage/images/${item?.image_2}`}
@@ -205,11 +222,11 @@ const index = () => {
                     className="w-10 mx-auto"
                   />
                 </td>
-                <th>
+                <td>
                   {data?.categories?.map?.(
                     (i) => i?.id == item?.parent_id && i?.name
                   )}
-                </th>
+                </td>
                 <td className="w-52">
                   <div className="flex items-center flex-wrap gap-3">
                     <Button
@@ -239,6 +256,7 @@ const index = () => {
         </table>
       </div>
 
+      {/* see */}
       <Modal
         title="Subkategoriya"
         open={isModalOpen}
@@ -246,12 +264,17 @@ const index = () => {
         okButtonProps={{ className: "bg-blue-500" }}
       >
         <div className="w-full">
-          Hozirgi Ikon rasmi:
-          <img
-            src={`https://api.abdullajonov.uz/adras-market-api/public/storage/images/${modalData?.image}`}
-            alt="image"
-            className="min-w-full w-full"
-          />
+          Hozirgi Ikon ko'rinishi:
+          <div className="flex items-center gap-3 border border-gray-600 rounded-full p-1 pr-3 my-2 max-w-fit mx-auto">
+            <div className="max-w-[70px] ">
+              <img
+                src={`https://api.abdullajonov.uz/adras-market-api/public/storage/images/${modalData?.image}`}
+                alt="category image"
+                className="w-full rounded-full aspect-square object-cover ring-2 ring-secondary ring-offset-1 transition hover:ring-4 hover:ring-blue-600"
+              />
+            </div>
+            <p>{modalData?.name}</p>
+          </div>
         </div>
         <div className="w-full">
           Hozirgi Banner rasmi:
@@ -296,12 +319,17 @@ const index = () => {
         footer={[]}
       >
         <div className="w-full">
-          Hozirgi Ikon rasmi
-          <img
-            src={`https://api.abdullajonov.uz/adras-market-api/public/storage/images/${modalData?.image}`}
-            alt="image"
-            className="min-w-full w-full"
-          />
+          Hozirgi Ikon ko'rinishi:
+          <div className="flex items-center gap-3 border border-gray-600 rounded-full p-1 pr-3 my-2 max-w-fit mx-auto">
+            <div className="max-w-[70px] ">
+              <img
+                src={`https://api.abdullajonov.uz/adras-market-api/public/storage/images/${modalData?.image}`}
+                alt="category image"
+                className="w-full rounded-full aspect-square object-cover ring-2 ring-secondary ring-offset-1 transition hover:ring-4 hover:ring-blue-600"
+              />
+            </div>
+            <p>{modalData?.name}</p>
+          </div>
         </div>
         <div className="w-full">
           Hozirgi Banner rasmi

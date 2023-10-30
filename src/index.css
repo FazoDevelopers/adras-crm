@@ -1,3 +1,38 @@
 @tailwind base;
 @tailwind utilities;
 @tailwind components;
+
+
+div:empty {
+  display: none;
+}
+
+body {
+  font-family: "Noto Sans", sans-serif;
+}
+
+body > .skiptranslate {
+  display: none;
+}
+
+.goog-te-banner-frame.skiptranslate {
+  display: none !important;
+}
+.skiptranslate > span {
+  display: none;
+}
+.skiptranslate {
+  color: white !important;
+}
+.skiptranslate > div select {
+  color: black !important;
+  transform: translateY(50%);
+}
+body {
+  top: 0px !important;
+}
+@media print {
+  #google_translate_element {
+    display: none;
+  }
+}
