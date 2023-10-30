@@ -36,17 +36,11 @@ const index = () => {
 
   async function handleCreate(values) {
     setLoading(true);
-    let start = `${new Date(values.start_time.$d).getDate()}.${
-      new Date(values.start_time.$d).getMonth() + 1
-    }.${new Date(values.start_time.$d).getFullYear()}`;
-    let end = `${new Date(values.end_time.$d).getDate()}.${
-      new Date(values.end_time.$d).getMonth() + 1
-    }.${new Date(values.end_time.$d).getFullYear()}`;
     let data = {
       amount: values.amount,
       product_slug: values.product_slug,
-      start_time: start,
-      end_time: end,
+      start_time: values.start_time,
+      end_time: values.end_time,
     };
     try {
       let response = await axios.post(
@@ -64,21 +58,14 @@ const index = () => {
 
   async function handleEdit(values) {
     setLoading(true);
-    let start = `${new Date(values?.start_time?.$d)?.getDate()}.${
-      new Date(values?.start_time?.$d)?.getMonth() + 1
-    }.${new Date(values?.start_time?.$d)?.getFullYear()}`;
-    let end = `${new Date(values?.end_time?.$d)?.getDate()}.${
-      new Date(values?.end_time?.$d)?.getMonth() + 1
-    }.${new Date(values?.end_time?.$d)?.getFullYear()}`;
     let data = {
       amount: values.amount,
       product_slug: values.product_slug,
-      start_time: start,
-      end_time: end,
+      start_time: values.start_time,
+      end_time: values.end_time,
     };
-    
-if(!values.start) delete data.start_time
-if(!values.end) delete data.end_time
+if(!values.start_time) delete data.start_time
+if(!values.end_time) delete data.end_time
     try {
       let response = await axios.post(
         `/admin/${localStorage.getItem("adras-token")}/discount/${
@@ -225,8 +212,8 @@ if(!values.end) delete data.end_time
                 <th className="py-3">{ind + 1}</th>
                 <th>{item?.product_slug}</th>
                 <th>{item?.amount}</th>
-                <th>{item?.start_time}</th>
-                <th>{item?.end_time}</th>
+                <th>{item?.start_time.slice(0,10)}</th>
+                <th>{item?.end_time.slice(0,10)}</th>
                 <td className="w-52">
                   <div className="flex items-center flex-wrap gap-3">
                     <Button
