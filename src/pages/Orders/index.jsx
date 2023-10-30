@@ -12,8 +12,8 @@ const index = () => {
 
   async function getData() {
     try {
-      let discount = await axios.get("/discount/get");
-      setData(discount?.data?.data);
+      let order = await axios.get(`/admin/${localStorage.getItem('adras-token')}/order/get`);
+      setData(order?.data?.data);
     } catch (error) {
       return;
     }
@@ -37,17 +37,18 @@ const index = () => {
   async function handleCreate(values) {
     setLoading(true);
     let data = {
-      amount: values.amount,
+      user_name: values.user_name,
       product_slug: values.product_slug,
-      start_time: values.start_time,
-      end_time: values.end_time,
+      size: values.size,
+      phone: values.phone,
+      date: values.date,
     };
     try {
       let response = await axios.post(
-        `/admin/${localStorage.getItem("adras-token")}/discount/store`,
+        `/order/store`,
         data
       );
-      if (response.status === 201) {
+      if (response.status === 200) {
         getData();
         setLoading(false);
       }
@@ -100,7 +101,7 @@ const index = () => {
     <div>
       <details>
         <summary className="text-3xl font-semibold mb-3">
-          Yangi chegirma qo'shish:
+          Yangi buyurtma qo'shish:{" "}
         </summary>
         <Form
           name="search"
@@ -128,8 +129,8 @@ const index = () => {
         </Form>
         <Form name="basic" onFinish={handleCreate} autoComplete="off">
           <Form.Item
-            label="Narxi"
-            name="amount"
+            label="Mijoz ismi"
+            name="user_name"
             rules={[
               {
                 required: true,
@@ -137,10 +138,7 @@ const index = () => {
               },
             ]}
           >
-            <Input
-              type="number"
-              className="border rounded border-blue-500 p-2"
-            />
+            <Input className="border rounded border-blue-500 p-2" />
           </Form.Item>
           <Form.Item
             label="Mahsulot"
@@ -154,13 +152,18 @@ const index = () => {
           >
             <Radio.Group>
               {products?.map?.((item) => (
-                <Radio value={item?.slug}>{item?.name}</Radio>
+                <Radio value={item?.slug}>
+                  <div>
+                    <h4 className="text-lg font-semibold">{item?.name}</h4>
+                    <p>UZS {item?.price}</p>
+                  </div>
+                </Radio>
               ))}
             </Radio.Group>
           </Form.Item>
           <Form.Item
-            label="Boshlanish vaqti"
-            name="start_time"
+            label="Soni"
+            name="size"
             rules={[
               {
                 required: true,
@@ -168,11 +171,15 @@ const index = () => {
               },
             ]}
           >
-            <DatePicker className="w-full border rounded border-blue-500 p-2" />
+            <Input
+              type="number"
+              min={1}
+              className="w-full border rounded border-blue-500 p-2"
+            />
           </Form.Item>
           <Form.Item
-            label="Tugash vaqti"
-            name="end_time"
+            label="Sana"
+            name="date"
             rules={[
               {
                 required: true,

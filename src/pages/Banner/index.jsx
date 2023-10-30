@@ -83,8 +83,8 @@ const index = () => {
 
   return (
     <div>
-      <div>
-        <h3 className="text-3xl font-semibold mb-3">Yangi banner qo'shish:</h3>
+      <details>
+        <summary className="text-3xl font-semibold mb-3">Yangi banner qo'shish:</summary>
         <Form name="basic" onFinish={handleCreate} autoComplete="off">
           <Form.Item
             label="Nomi"
@@ -126,7 +126,7 @@ const index = () => {
             </Button>
           </Form.Item>
         </Form>
-      </div>
+      </details>
       <div>
         <table className="w-full">
           <thead>

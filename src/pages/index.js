@@ -6,6 +6,8 @@ import Products from "./Products";
 import StockProducts from "./StockProducts";
 import Banner from "./Banner";
 import Stock from "./Stock";
+import Orders from "./Orders";
+import Delivery from "./Delivery";
 
 export {
   Login,
@@ -16,4 +18,6 @@ export {
   StockProducts,
   Banner,
   Stock,
+  Orders,
+  Delivery,
 };

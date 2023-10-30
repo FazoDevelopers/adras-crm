@@ -4,8 +4,10 @@ import { Route, Routes, useNavigate } from "react-router-dom";
 import {
   Banner,
   Categories,
+  Delivery,
   Home,
   Login,
+  Orders,
   Products,
   Stock,
   StockProducts,
@@ -47,19 +49,19 @@ const App = () => {
                 // },
                 {
                   key: "2",
-                  icon: <span className="fa-solid fa-home" />,
+                  icon: <span className="fa-solid fa-box" />,
                   label: "Kategoriyalar",
                   onClick: () => navigate("/categories"),
                 },
                 {
                   key: "3",
-                  icon: <span className="fa-solid fa-home" />,
+                  icon: <span className="fa-solid fa-boxes-stacked" />,
                   label: "Subkategoriyalar",
                   onClick: () => navigate("/subcategories"),
                 },
                 {
                   key: "5",
-                  icon: <span className="fa-solid fa-home" />,
+                  icon: <span className="fa-solid fa-bullseye" />,
                   label: "Mahsulotlar",
                   onClick: () => navigate("/products"),
                 },
@@ -80,6 +82,18 @@ const App = () => {
                   icon: <span className="fa-solid fa-newspaper" />,
                   label: "Aksiya banner",
                   onClick: () => navigate("/stock"),
+                },
+                {
+                  key: "8",
+                  icon: <span className="fa-solid fa-bell-concierge" />,
+                  label: "Buyurtmalar",
+                  onClick: () => navigate("/orders"),
+                },
+                {
+                  key: "9",
+                  icon: <span className="fa-solid fa-truck" />,
+                  label: "Yetkazib berish",
+                  onClick: () => navigate("/delivery"),
                 },
               ]}
             />
@@ -129,6 +143,8 @@ const App = () => {
                 <Route path="/discount" element={<StockProducts />} />
                 <Route path="/banner" element={<Banner />} />
                 <Route path="/stock" element={<Stock />} />
+                <Route path="/orders" element={<Orders />} />
+                <Route path="/delivery" element={<Delivery />} />
               </Routes>
             </Content>
           </Layout>

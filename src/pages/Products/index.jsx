@@ -41,6 +41,8 @@ const index = () => {
     data.append("image", image);
     data.append("category", slug);
     data.append("sku", values.sku);
+    data.append("amount", values.amount);
+    data.append("type", values.type);
     data.append("shipping_price", values.shipping_price);
     try {
       let response = await axios.post(
@@ -69,6 +71,8 @@ const index = () => {
     data.append("image", image);
     data.append("category", slug);
     data.append("sku", values.sku);
+    data.append("amount", values.amount);
+    data.append("type", values.type);
     data.append("shipping_price", values.shipping_price);
     if (!image) data.delete("image");
     if (!values.name) data.delete("name");
@@ -76,6 +80,8 @@ const index = () => {
     if (!values.price) data.delete("price");
     if (!values.category) data.delete("category");
     if (!values.sku) data.delete("sku");
+    if (!values.amount) data.delete("amount");
+    if (!values.type) data.delete("type");
     if (!values.shipping_price) data.delete("shipping_price");
     try {
       let response = await axios.post(
@@ -109,10 +115,10 @@ const index = () => {
 
   return (
     <div>
-      <div>
-        <h3 className="text-3xl font-semibold mb-3">
+      <details>
+        <summary className="text-3xl font-semibold mb-3">
           Yangi mahsulot qo'shish:
-        </h3>
+        </summary>
         <Form name="form" onFinish={handleCreate} autoComplete="off">
           <Form.Item
             label="Nomi"
@@ -150,6 +156,43 @@ const index = () => {
           >
             <Input.TextArea className="border rounded border-blue-500 p-2" />
           </Form.Item>
+          <div className="grid grid-cols-2 gap-5">
+            <Form.Item
+              label="Qiymati"
+              name="amount"
+              rules={[
+                {
+                  required: true,
+                  message: "",
+                },
+              ]}
+            >
+              <Input min={0} className="border rounded border-blue-500" />
+            </Form.Item>
+            <Form.Item
+              label="O'lchov birligi"
+              name="type"
+              rules={[
+                {
+                  required: true,
+                  message: "",
+                },
+              ]}
+            >
+              <Select className="w-full border rounded-lg border-blue-500">
+                <option value="dona">Dona</option>
+                <option value="quti">Quti</option>
+                <option value="pack">Bog'lam</option>
+                <option value="kg">Kilogram</option>
+                <option value="gr">Gram</option>
+                <option value="mlgr">Milligram</option>
+                <option value="l">Litr</option>
+                <option value="ml">Millilitr</option>
+                <option value="m">Metr</option>
+                <option value="sm">Santimetr</option>
+              </Select>
+            </Form.Item>
+          </div>
           <Form.Item
             label="Narxi"
             name="price"
@@ -166,16 +209,7 @@ const index = () => {
               className="border rounded border-blue-500 p-2"
             />
           </Form.Item>
-          <Form.Item
-            label="Eski narxi"
-            name="shipping_price"
-            rules={[
-              {
-                required: true,
-                message: "",
-              },
-            ]}
-          >
+          <Form.Item label="Eski narxi" name="shipping_price">
             <Input
               type="number"
               min={0}
@@ -232,7 +266,7 @@ const index = () => {
             </Button>
           </Form.Item>
         </Form>
-      </div>
+      </details>
       <div>
         <table className="w-full">
           <thead>
@@ -316,6 +350,14 @@ const index = () => {
               <td>{modalData?.sku}</td>
             </tr>
             <tr>
+              <th className="py-3">Qiymati:</th>
+              <td>{modalData?.amount}</td>
+            </tr>
+            <tr>
+              <th className="py-3">O'lchov birligi:</th>
+              <td>{modalData?.type}</td>
+            </tr>
+            <tr>
               <th className="py-3">Tafsiloti:</th>
               <td>{modalData?.description}</td>
             </tr>
@@ -361,6 +403,30 @@ const index = () => {
               defaultValue={modalData?.sku}
               className="border rounded border-blue-500 p-2"
             />
+          </Form.Item>
+          <Form.Item label="Qiymati" name="amount">
+            <Input
+              defaultValue={modalData?.amount}
+              min={0}
+              className="border rounded border-blue-500"
+            />
+          </Form.Item>
+          <Form.Item label="O'lchov birligi" name="type">
+            <Select
+              defaultValue={modalData?.type}
+              className="w-full border rounded-lg border-blue-500"
+            >
+              <option value="dona">Dona</option>
+              <option value="quti">Quti</option>
+              <option value="pack">Bog'lam</option>
+              <option value="kg">Kilogram</option>
+              <option value="gr">Gram</option>
+              <option value="mlgr">Milligram</option>
+              <option value="l">Litr</option>
+              <option value="ml">Millilitr</option>
+              <option value="m">Metr</option>
+              <option value="sm">Santimetr</option>
+            </Select>
           </Form.Item>
           <Form.Item label="Tafsilot" name="description">
             <Input.TextArea

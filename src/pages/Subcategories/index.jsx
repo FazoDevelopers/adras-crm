@@ -95,13 +95,13 @@ const index = () => {
       return;
     }
   }
-  console.log(data);
+  
   return (
     <div>
-      <div>
-        <h3 className="text-3xl font-semibold mb-3">
+      <details>
+        <summary className="text-3xl font-semibold mb-3">
           Yangi subkategoriya qo'shish:
-        </h3>
+        </summary>
         <Form name="form" onFinish={handleCreate} autoComplete="off">
           <Form.Item
             label="Nomi"
@@ -181,7 +181,7 @@ const index = () => {
             </Button>
           </Form.Item>
         </Form>
-      </div>
+      </details>
       <div>
         <table className="w-full">
           <thead>
