@@ -249,6 +249,20 @@ const index = () => {
       setLoading(false);
     }
   }
+
+  async function handleDeleteVariant(id) {
+    try {
+      let response = await axios.delete(
+        `/admin/${localStorage.getItem("adras-token")}/product-type/delete/${id}`
+      );
+      if (response.status === 200) {
+        getData();
+        setIsVariantModalOpen(false)
+      }
+    } catch (error) {
+      return;
+    }
+  }
  
   return (
     <div>
@@ -732,10 +746,10 @@ const index = () => {
             <Button
               htmlType="button"
               className="ml-5"
-              onClick={()=>{
-                setAddedProductSlug(modalData?.slug)
+              onClick={() => {
+                setAddedProductSlug(modalData?.slug);
               }}
-              icon={<span className="fa-solid fa-plus"/>}
+              icon={<span className="fa-solid fa-plus" />}
             >
               Variant qo'shish
             </Button>
@@ -887,6 +901,14 @@ const index = () => {
                 <tr>
                   <th className="py-1">Yaratilgan sana:</th>
                   <td>{modalData?.created_at?.slice(0, 10)}</td>
+                </tr>
+                <tr>
+                  <th className="py-1"></th>
+                  <td>
+                    <Button danger onClick={()=>handleDeleteVariant(modalData?.id)}>
+                      O'chirish
+                    </Button>
+                  </td>
                 </tr>
               </tbody>
             </table>
