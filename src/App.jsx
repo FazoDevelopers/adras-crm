@@ -19,6 +19,9 @@ import {
   Subcategory as LandingSubcategory,
   BuyProduct as LandingBuyProduct,
 } from "./landing";
+import { setMainBanners, setNewProducts } from './redux'
+import { useDispatch } from "react-redux";
+import axios from "axios";
 
 const { Header, Sider, Content } = Layout;
 
@@ -27,9 +30,22 @@ const App = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [adminBlock, setAdminBlock] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch()
   const {
     token: { colorBgContainer },
   } = theme.useToken();
+
+  async function getAllDataForLanding() {
+    try {
+      let main_banners = await axios.get("/main-page-news/get");
+      let new_products = await axios.get("/get-product-uz-new");
+
+      dispatch(setMainBanners(main_banners?.data?.data));
+      dispatch(setNewProducts(new_products?.data?.product?.data));
+    } catch (error) {
+      return
+    }
+  }
 
   useEffect(() => {
     let token = localStorage.getItem("adras-token");
@@ -38,6 +54,9 @@ const App = () => {
       setAdminBlock(true);
     } else {
       setAdminBlock(false);
+    }
+    if(window.location.pathname.startsWith('/admin') === false){
+      getAllDataForLanding()
     }
   }, [window.location.pathname, adminBlock]);
 

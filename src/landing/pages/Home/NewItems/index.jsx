@@ -1,10 +1,11 @@
 import { Button } from "antd";
 import { useRef } from "react";
-import { Card } from "../../../components";
+import { useSelector } from "react-redux";
+import { Card, CardPlaceholder } from "../../../components";
 
-const index = ({data}) => {
+const index = () => {
   const productsRef = useRef();
-
+  const { news_products } = useSelector((state) => state.data);
 
   return (
     <div>
@@ -39,12 +40,16 @@ const index = ({data}) => {
         ref={productsRef}
         className="flex gap-x-6 gap-y-3 overflow-x-auto scrollbar-none py-4"
       >
-        {data?.map?.((product, ind) => (
-          <Card
-            key={ind}
-            data={{ ...product, badge: { text: "New", color: "red" } }}
-          />
-        ))}
+        {news_products?.length > 0
+          ? news_products?.map?.((product, ind) => (
+              <Card
+                key={ind}
+                data={{ ...product, badge: { text: "New", color: "red" } }}
+              />
+            ))
+          : new Array(5)
+              .fill(null)
+              .map((_, ind) => <CardPlaceholder key={ind} />)}
       </div>
     </div>
   );

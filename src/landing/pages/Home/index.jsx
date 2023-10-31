@@ -15,7 +15,6 @@ import axios from "axios";
 
 const index = () => {
   const [categories, setCategories] = useState([]);
-  const [newItems, setNewItems] = useState([]);
 
   async function getCategories() {
     try {
@@ -26,18 +25,8 @@ const index = () => {
     }
   }
 
-  async function getNewsetItems() {
-    try {
-      let { data } = await axios.get("/get-product-uz-new");
-      setNewItems(data?.product);
-    } catch (error) {
-      return;
-    }
-  }
-
   useEffect(() => {
     getCategories();
-    getNewsetItems()
   }, []);
 
   return (
@@ -58,7 +47,7 @@ const index = () => {
           ))}
         </div>
         <div className="my-10">
-          <NewItems data={newItems} />
+          <NewItems />
         </div>
         <div className="mb-10 mt-20">
           <StockCarousel />
@@ -70,10 +59,12 @@ const index = () => {
       <div className="my-10 mt-20 pr-5 pl-5 lg:pl-0">
         <Category />
       </div>
-      <div className="my-10 pr-5 pl-5 lg:pl-0 mb-52 lg:mb-0 -translate-y-1/3 lg:translate-y-0">
-        <SecondCategory />
+      <div>
+        <div className="my-10 pr-5 pl-5 lg:pl-0 mb-52 lg:mb-0 translate-y-1/3 lg:translate-y-0">
+          <SecondCategory />
+        </div>
       </div>
-      <div className="w-full md:w-4/5 mx-auto px-3 md:mt-20 md:px-0 sm:-translate-y-1/3 lg:translate-y-0">
+      <div className="w-full md:w-4/5 mx-auto px-3 md:mt-20 max-[1024px]:mb-52 max-[600px]:mb-10 md:px-0 sm:translate-y-1/3 lg:translate-y-0">
         <Newsletter />
       </div>
       <Footer />

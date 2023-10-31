@@ -19,7 +19,7 @@ const index = ({ data }) => {
       color={data?.badge?.color}
       className="group"
     >
-      <div className="aspect-h-1 aspect-w-1 max-w-full overflow-hidden rounded-lg bg-gray-200 w-72">
+      <div className="aspect-h-1 aspect-w-1 min-w-full w-72 overflow-hidden rounded-lg bg-gray-200">
         <img
           src={`https://api.abdullajonov.uz/adras-market-api/public/storage/images/${data?.image}`}
           alt={data?.name}
@@ -33,7 +33,9 @@ const index = ({ data }) => {
       {data?.discount ? (
         <div className="mt-1 flex items-center justify-start gap-5 text-lg sm:text-xl">
           <p className="line-through opacity-75">UZS {data?.discount}</p>
-          <p translate="no" className="font-semibold">UZS {data?.price}</p>
+          <p translate="no" className="font-semibold">
+            UZS {data?.price}
+          </p>
         </div>
       ) : (
         <p className="mt-1 text-xl text-gray-900">
