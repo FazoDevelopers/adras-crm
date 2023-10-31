@@ -1,6 +1,7 @@
 import axios from "axios";
 import { Button, Carousel, Form, Input, Modal } from "antd";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 const index = () => {
   const [data, setData] = useState([]);
@@ -62,6 +63,7 @@ const index = () => {
         getData();
         setIsEditModalOpen(false);
         setLoading(false);
+        // toast(`Banner qo'shildi.`, { type: "success" });
       }
     } catch (error) {
       setLoading(false);

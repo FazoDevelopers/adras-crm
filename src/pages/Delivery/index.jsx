@@ -1,6 +1,7 @@
 import axios from "axios";
 import { Button, Form, Input, Modal } from "antd";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 const index = () => {
   const [data, setData] = useState([]);
@@ -29,6 +30,7 @@ const index = () => {
       if (response.status === 200) {
         getData();
         setLoading(false);
+        // toast(`Yetkazib berish narxi qo'shildi.`, { type: "success" });
       }
     } catch (error) {
       setLoading(false);

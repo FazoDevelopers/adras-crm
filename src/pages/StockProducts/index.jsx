@@ -1,6 +1,7 @@
 import axios from "axios";
 import { Button, DatePicker, Form, Input, Modal, Radio, Select } from "antd";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 const index = () => {
   const [data, setData] = useState([]);
@@ -52,6 +53,7 @@ const index = () => {
         getData();
         setIsAddModalOpen(false);
         setLoading(false);
+        // toast(`Mahsulotga chegirma qo'shildi.`, { type: "success" });
       }
     } catch (error) {
       setLoading(false);

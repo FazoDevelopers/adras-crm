@@ -1,5 +1,6 @@
 import axios from "axios";
 import { Button, Checkbox, Form, Input } from "antd";
+import { toast } from "react-toastify";
 
 const App = () => {
   const onFinish = async (values) => {
@@ -13,6 +14,7 @@ const App = () => {
         window.location.replace("/admin");
       }
     } catch (error) {
+      // toast(`Nimadadir xatolik ketdi!`, { type: "error" });
       return;
     }
   };

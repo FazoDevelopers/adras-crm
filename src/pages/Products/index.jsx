@@ -1,13 +1,16 @@
 import axios from "axios";
 import { Button, Form, Input, Modal, Select } from "antd";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 const index = () => {
   const [data, setData] = useState({
     products: [],
+    categories: [],
     subcategories: [],
   });
   const [image, setImage] = useState();
+  const [parentSlug, setParentSlug] = useState();
   const [slug, setSlug] = useState();
   const [loading, setLoading] = useState(false);
   const [modalData, setModalData] = useState();
@@ -22,6 +25,7 @@ const index = () => {
   async function getData() {
     try {
       let products = await axios.get("/products/get");
+      let categories = await axios.get("/parent-category/get");
       let subcategories = await axios.get("/child-category/get");
       setPagination({
         next: products?.data?.products?.next_page_url,
@@ -30,13 +34,14 @@ const index = () => {
       setData((prev) => ({
         ...prev,
         products: products?.data?.products?.data,
+        categories: categories?.data?.data,
         subcategories: subcategories?.data?.data,
       }));
     } catch (error) {
       return;
     }
   }
-
+console.log(data);
   async function getPaginationData(url) {
     try {
       let products = await axios.get(url);
@@ -82,12 +87,14 @@ const index = () => {
     data.append("description", values.description);
     data.append("price", values.price);
     data.append("image", image);
-    data.append("category", slug);
+    data.append("category", parentSlug);
+    data.append("sub_category", slug);
     data.append("sku", values.sku);
     data.append("amount", values.amount);
     data.append("type", values.type);
     data.append("shipping_price", values.shipping_price);
     if (!values.shipping_price) data.delete("shipping_price");
+    if (!slug) data.delete("sub_category");
     try {
       let response = await axios.post(
         `/admin/${localStorage.getItem("adras-token")}/products/store`,
@@ -97,8 +104,10 @@ const index = () => {
         getData();
         setImage(null);
         setSlug(null);
+        setParentSlug(null);
         setIsAddModalOpen(false);
         setLoading(false);
+        // toast(`Mahsulot qo'shildi.`, { type: "success" });
       }
     } catch (error) {
       setLoading(false);
@@ -112,7 +121,8 @@ const index = () => {
     data.append("description", values.description);
     data.append("price", values.price);
     data.append("image", image);
-    data.append("category", slug);
+    data.append("category", parentSlug);
+    data.append("sub_category", slug);
     data.append("sku", values.sku);
     data.append("amount", values.amount);
     data.append("type", values.type);
@@ -135,6 +145,8 @@ const index = () => {
       );
       if (response.status === 200) {
         getData();
+        setSlug(null)
+        setParentSlug(null)
         setIsEditModalOpen(false);
         setLoading(false);
       }
@@ -276,7 +288,7 @@ const index = () => {
               />
             </Form.Item>
             <Form.Item
-              label="Subkategoriya"
+              label="Kategoriya"
               name="cetegory"
               rules={[
                 {
@@ -286,7 +298,19 @@ const index = () => {
               ]}
             >
               <Select
-                type="file"
+                className="w-full border rounded-lg border-blue-500"
+                onChange={(e) => setParentSlug(e)}
+              >
+                {data?.categories?.map?.((item, ind) => (
+                  <option key={ind} value={item?.slug}>
+                    {item?.name}
+                  </option>
+                ))}
+              </Select>
+            </Form.Item>
+            <Form.Item label="Subkategoriya" name="sub_cetegory">
+              <Select
+              disabled={!parentSlug}
                 className="w-full border rounded-lg border-blue-500"
                 onChange={(e) => setSlug(e)}
               >
@@ -550,9 +574,22 @@ const index = () => {
               className="border rounded border-blue-500 p-2"
             />
           </Form.Item>
-          <Form.Item label="Subkategoriya" name="cetegory">
+          <Form.Item label="Kategoriya" name="cetegory">
             <Select
               defaultValue={modalData?.category}
+              className="w-full border rounded-lg border-blue-500"
+              onChange={(e) => setParentSlug(e)}
+            >
+              {data?.categories?.map?.((item, ind) => (
+                <option key={ind} value={item?.slug}>
+                  {item?.name}
+                </option>
+              ))}
+            </Select>
+          </Form.Item>
+          <Form.Item label="Subkategoriya" name="sub_cetegory">
+            <Select
+              defaultValue={modalData?.sub_category}
               type="file"
               className="w-full border rounded-lg border-blue-500"
               onChange={(e) => setSlug(e)}

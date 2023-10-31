@@ -1,6 +1,7 @@
 import axios from "axios";
 import { Button, Form, Input, Modal } from "antd";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 const index = () => {
   const [data, setData] = useState([]);
@@ -42,6 +43,7 @@ const index = () => {
         setImage2(null);
         setIsAddModalOpen(false)
         setLoading(false);
+        // toast(`Kategoriya qo'shildi.`, {type:"success"})
       }
     } catch (error) {
       setLoading(false);
