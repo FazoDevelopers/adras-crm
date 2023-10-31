@@ -1,9 +1,9 @@
 import axios from "axios";
-import { Button, Form, Input, Modal } from "antd";
+import { Button, Form, Input, message, Modal } from "antd";
 import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
 
 const index = () => {
+  const [messageApi, contextHolder] = message.useMessage();
   const [data, setData] = useState([]);
   const [image, setImage] = useState();
   const [image2, setImage2] = useState();
@@ -41,11 +41,12 @@ const index = () => {
         getData();
         setImage(null);
         setImage2(null);
-        setIsAddModalOpen(false)
+        setIsAddModalOpen(false);
         setLoading(false);
-        // toast(`Kategoriya qo'shildi.`, {type:"success"})
+        messageApi.success("Kategoriya yaratildi!");
       }
     } catch (error) {
+      messageApi.error("Nimadadir xatolik ketdi!");
       setLoading(false);
     }
   }
@@ -72,6 +73,7 @@ const index = () => {
         setLoading(false);
       }
     } catch (error) {
+      messageApi.error("Nimadadir xatolik ketdi!");
       setLoading(false);
     }
   }
@@ -91,6 +93,7 @@ const index = () => {
 
   return (
     <div>
+      {contextHolder}
       {/* create */}
       <div>
         <Button
@@ -227,7 +230,7 @@ const index = () => {
           </tbody>
         </table>
       </div>
-      
+
       {/* see */}
       <Modal
         title="Kategoriya"
@@ -275,7 +278,7 @@ const index = () => {
           </tbody>
         </table>
       </Modal>
-      
+
       {/* edit */}
       <Modal
         title="Kategoriyani tahrirlash"

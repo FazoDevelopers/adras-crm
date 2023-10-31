@@ -1,9 +1,9 @@
 import axios from "axios";
-import { Button, Carousel, Form, Input, Modal } from "antd";
+import { Button, Carousel, Form, Input, message, Modal } from "antd";
 import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
 
 const index = () => {
+  const [messageApi, contextHolder] = message.useMessage();
   const [data, setData] = useState([]);
   const [image, setImage] = useState();
   const [loading, setLoading] = useState(false);
@@ -38,8 +38,10 @@ const index = () => {
         getData();
         setImage(null);
         setLoading(false);
+        messageApi.success("Banner qo'shildi!");
       }
     } catch (error) {
+      messageApi.error("Nimadadir xatolik ketdi!");
       setImage(null);
       setLoading(false);
     }
@@ -63,9 +65,9 @@ const index = () => {
         getData();
         setIsEditModalOpen(false);
         setLoading(false);
-        // toast(`Banner qo'shildi.`, { type: "success" });
       }
     } catch (error) {
+      messageApi.error("Nimadadir xatolik ketdi!");
       setLoading(false);
     }
   }
@@ -87,6 +89,7 @@ const index = () => {
 
   return (
     <div>
+      {contextHolder}
       <div>
         <h3 className="text-3xl font-semibold mb-3">Yangi banner qo'shish:</h3>
         <Form name="basic" onFinish={handleCreate} autoComplete="off">

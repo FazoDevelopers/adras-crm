@@ -1,9 +1,9 @@
 import axios from "axios";
-import { Button, Form, Input, Modal, Select } from "antd";
+import { Button, Form, Input, message, Modal, Select } from "antd";
 import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
 
 const index = () => {
+  const [messageApi, contextHolder] = message.useMessage();
   const [data, setData] = useState({
     categories: [],
     subcategories: [],
@@ -52,9 +52,12 @@ const index = () => {
         setImage2(null);
         setIsAddModalOpen(false);
         setLoading(false);
-        // toast(`Subkategoriya qo'shildi.`, { type: "success" });
+        messageApi.success("Subkategoriya qo'shildi!");
       }
     } catch (error) {
+      messageApi.error(
+        "Nimadadir xatolik ketdi! Ma'lumotlarni tekshiring yoki qaytadan uruning!"
+      );
       setLoading(false);
     }
   }
@@ -83,6 +86,7 @@ const index = () => {
         setLoading(false);
       }
     } catch (error) {
+      messageApi.error("Nimadadir xatolik ketdi!");
       setLoading(false);
     }
   }

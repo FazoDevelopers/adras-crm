@@ -1,9 +1,18 @@
 import axios from "axios";
-import { Button, DatePicker, Form, Input, Modal, Radio, Select } from "antd";
+import {
+  Button,
+  DatePicker,
+  Form,
+  Input,
+  message,
+  Modal,
+  Radio,
+  Select,
+} from "antd";
 import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
 
 const index = () => {
+  const [messageApi, contextHolder] = message.useMessage();
   const [data, setData] = useState([]);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -53,9 +62,10 @@ const index = () => {
         getData();
         setIsAddModalOpen(false);
         setLoading(false);
-        // toast(`Mahsulotga chegirma qo'shildi.`, { type: "success" });
+        messageApi.success("Mahsulotga chegirma qo'shildi!");
       }
     } catch (error) {
+      messageApi.error("Nimadadir xatolik ketdi!");
       setLoading(false);
     }
   }

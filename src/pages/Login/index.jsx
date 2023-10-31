@@ -1,8 +1,8 @@
 import axios from "axios";
-import { Button, Checkbox, Form, Input } from "antd";
-import { toast } from "react-toastify";
+import { Button, Checkbox, Form, Input, message } from "antd";
 
 const App = () => {
+  const [messageApi, contextHolder] = message.useMessage();
   const onFinish = async (values) => {
     try {
       let response = await axios.post("admin/login", values);
@@ -14,13 +14,14 @@ const App = () => {
         window.location.replace("/admin");
       }
     } catch (error) {
-      // toast(`Nimadadir xatolik ketdi!`, { type: "error" });
+      messageApi.error("Nimadadir xatolik ketdi!");
       return;
     }
   };
 
   return (
     <div className="absolute inset-0 grid place-items-center">
+      {contextHolder}
       <div className="w-11/12 md:w-1/2">
         <Form name="basic" onFinish={onFinish} autoComplete="off">
           <Form.Item

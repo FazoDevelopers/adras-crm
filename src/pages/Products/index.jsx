@@ -1,9 +1,9 @@
 import axios from "axios";
-import { Button, Form, Input, Modal, Select } from "antd";
+import { Button, Form, Input, message, Modal, Select } from "antd";
 import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
 
 const index = () => {
+  const [messageApi, contextHolder] = message.useMessage();
   const [data, setData] = useState({
     products: [],
     categories: [],
@@ -126,9 +126,10 @@ const index = () => {
         setParentSlug(null);
         setIsAddModalOpen(false);
         setLoading(false);
-        // toast(`Mahsulot qo'shildi.`, { type: "success" });
+        messageApi.success("Mahsulot qo'shildi!");
       }
     } catch (error) {
+      messageApi.error("Nimadadir xatolik ketdi!");
       setLoading(false);
     }
   }
@@ -173,6 +174,7 @@ const index = () => {
         setLoading(false);
       }
     } catch (error) {
+      messageApi.error("Nimadadir xatolik ketdi!");
       setLoading(false);
     }
   }
@@ -192,6 +194,7 @@ const index = () => {
   console.log(data?.subcategories);
   return (
     <div>
+      {contextHolder}
       {/* add */}
       <div>
         <Button
@@ -606,7 +609,7 @@ const index = () => {
 
           <Form.Item label="Kategoriya" name="cetegory">
             <Select
-            defaultValue={modalData?.category}
+              defaultValue={modalData?.category}
               className="w-full border rounded-lg border-blue-500"
               onChange={(e) => {
                 setParentSlug(e);
@@ -622,7 +625,7 @@ const index = () => {
           </Form.Item>
           <Form.Item label="Subkategoriya" name="sub_cetegory">
             <Select
-            defaultValue={modalData?.sub_category}
+              defaultValue={modalData?.sub_category}
               className="w-full border rounded-lg border-blue-500"
               onChange={(e) => setSlug(e)}
             >
