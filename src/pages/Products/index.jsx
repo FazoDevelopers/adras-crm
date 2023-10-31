@@ -41,7 +41,26 @@ const index = () => {
       return;
     }
   }
-console.log(data);
+
+  async function getChildCategories(slug) {
+    try {
+      let subcategories = await axios.get("/child-category/get");
+      let category = data?.categories?.find?.((item) => item?.slug === slug);
+      let foundSubcategories = [];
+      subcategories?.data?.data?.forEach?.((item) => {
+        if (item?.parent_id == category?.id) {
+          foundSubcategories.push(item);
+        }
+      });
+      setData((prev) => ({
+        ...prev,
+        subcategories: foundSubcategories,
+      }));
+    } catch (error) {
+      return;
+    }
+  }
+
   async function getPaginationData(url) {
     try {
       let products = await axios.get(url);
@@ -116,6 +135,8 @@ console.log(data);
 
   async function handleEdit(values) {
     setLoading(true);
+    console.log("p", parentSlug);
+    console.log("", slug);
     let data = new FormData();
     data.append("name", values.name);
     data.append("description", values.description);
@@ -131,7 +152,8 @@ console.log(data);
     if (!values.name) data.delete("name");
     if (!values.description) data.delete("description");
     if (!values.price) data.delete("price");
-    if (!values.category) data.delete("category");
+    if (!parentSlug) data.delete("category");
+    if (!slug) data.delete("sub_category");
     if (!values.sku) data.delete("sku");
     if (!values.amount) data.delete("amount");
     if (!values.type) data.delete("type");
@@ -145,8 +167,8 @@ console.log(data);
       );
       if (response.status === 200) {
         getData();
-        setSlug(null)
-        setParentSlug(null)
+        setSlug(null);
+        setParentSlug(null);
         setIsEditModalOpen(false);
         setLoading(false);
       }
@@ -167,7 +189,7 @@ console.log(data);
       return;
     }
   }
-
+  console.log(data?.subcategories);
   return (
     <div>
       {/* add */}
@@ -299,7 +321,10 @@ console.log(data);
             >
               <Select
                 className="w-full border rounded-lg border-blue-500"
-                onChange={(e) => setParentSlug(e)}
+                onChange={(e) => {
+                  setParentSlug(e);
+                  getChildCategories(e);
+                }}
               >
                 {data?.categories?.map?.((item, ind) => (
                   <option key={ind} value={item?.slug}>
@@ -310,7 +335,7 @@ console.log(data);
             </Form.Item>
             <Form.Item label="Subkategoriya" name="sub_cetegory">
               <Select
-              disabled={!parentSlug}
+                disabled={!parentSlug}
                 className="w-full border rounded-lg border-blue-500"
                 onChange={(e) => setSlug(e)}
               >
@@ -502,7 +527,7 @@ console.log(data);
             </tr>
             <tr>
               <th className="py-3">Yaratilgan sana:</th>
-              <td>{modalData?.created_at.slice(0, 10)}</td>
+              <td>{modalData?.created_at?.slice(0, 10)}</td>
             </tr>
           </tbody>
         </table>
@@ -512,7 +537,11 @@ console.log(data);
       <Modal
         title="Mahsulotni tahrirlash"
         open={isEditModalOpen}
-        onCancel={() => setIsEditModalOpen(false)}
+        onCancel={() => {
+          setIsEditModalOpen(false);
+          setModalData({});
+        }}
+        destroyOnClose={true}
         footer={[]}
       >
         <div className="w-full my-2">
@@ -574,11 +603,15 @@ console.log(data);
               className="border rounded border-blue-500 p-2"
             />
           </Form.Item>
+
           <Form.Item label="Kategoriya" name="cetegory">
             <Select
-              defaultValue={modalData?.category}
+            defaultValue={modalData?.category}
               className="w-full border rounded-lg border-blue-500"
-              onChange={(e) => setParentSlug(e)}
+              onChange={(e) => {
+                setParentSlug(e);
+                getChildCategories(e);
+              }}
             >
               {data?.categories?.map?.((item, ind) => (
                 <option key={ind} value={item?.slug}>
@@ -589,8 +622,7 @@ console.log(data);
           </Form.Item>
           <Form.Item label="Subkategoriya" name="sub_cetegory">
             <Select
-              defaultValue={modalData?.sub_category}
-              type="file"
+            defaultValue={modalData?.sub_category}
               className="w-full border rounded-lg border-blue-500"
               onChange={(e) => setSlug(e)}
             >

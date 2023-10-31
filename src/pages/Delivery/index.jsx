@@ -15,7 +15,7 @@ const index = () => {
       return;
     }
   }
-  console.log(data);
+
   useEffect(() => {
     getData();
   }, []);
@@ -72,12 +72,12 @@ const index = () => {
 
   return (
     <div>
-      <div>
-        <h3 className="text-3xl font-semibold mb-3">Yetkazib berish narxi:</h3>
+      <h3 className="text-3xl font-semibold mb-3">Yetkazib berish narxlari:</h3>
+      <div className="border border-gray-300 rounded-lg p-2 bg-white shadow-lg">
         <Form name="basic" onFinish={handleCreate} autoComplete="off">
           <Form.Item
-            label="Narx"
-            name="price"
+            label="Namangan shahri"
+            name="price_city"
             rules={[
               {
                 required: true,
@@ -86,7 +86,39 @@ const index = () => {
             ]}
           >
             <Input
-              defaultValue={data?.[data?.length - 1]?.price}
+              defaultValue={data?.[data?.length - 1]?.price_city}
+              type="number"
+              className="border rounded border-blue-500 p-2"
+            />
+          </Form.Item>
+          <Form.Item
+            label="Namangan viloyati"
+            name="price_region"
+            rules={[
+              {
+                required: true,
+                message: "",
+              },
+            ]}
+          >
+            <Input
+              defaultValue={data?.[data?.length - 1]?.price_region}
+              type="number"
+              className="border rounded border-blue-500 p-2"
+            />
+          </Form.Item>
+          <Form.Item
+            label="O'zbekiston bo'ylab"
+            name="price_uzb"
+            rules={[
+              {
+                required: true,
+                message: "",
+              },
+            ]}
+          >
+            <Input
+              defaultValue={data?.[data?.length - 1]?.price_uzb}
               type="number"
               className="border rounded border-blue-500 p-2"
             />
@@ -102,17 +134,43 @@ const index = () => {
             </Button>
           </Form.Item>
         </Form>
-        <div className="flex items-center gap-5">
-          <h4 className="text-lg font-medium">
-            Hozirgi yetkazib berish narxi:
-          </h4>
-          <p className="font-semibold text-blue-700">UZS {data?.[data?.length - 1]?.price}</p>
-        </div>
-        <div className="flex items-center gap-5">
-          <h4 className="text-lg font-medium">
-            Tayinlangan sana:
-          </h4>
-          <p>{data?.[data?.length - 1]?.created_at?.slice?.(0,10)}</p>
+        <div className="flex flex-col gap-3">
+          <div className="border-b py-3">
+            <div className="flex items-center gap-5">
+              <h4 className="text-lg font-medium">Namangan shahri:</h4>
+              <p className="font-semibold text-blue-700">
+                UZS {data?.[data?.length - 1]?.price}
+              </p>
+            </div>
+            <div className="flex items-center gap-5">
+              <h4 className="text-lg font-medium">Tayinlangan sana:</h4>
+              <p>{data?.[data?.length - 1]?.created_at?.slice?.(0, 10)}</p>
+            </div>
+          </div>
+          <div className="border-b py-3">
+            <div className="flex items-center gap-5">
+              <h4 className="text-lg font-medium">Namangan viloyati:</h4>
+              <p className="font-semibold text-blue-700">
+                UZS {data?.[data?.length - 1]?.price}
+              </p>
+            </div>
+            <div className="flex items-center gap-5">
+              <h4 className="text-lg font-medium">Tayinlangan sana:</h4>
+              <p>{data?.[data?.length - 1]?.created_at?.slice?.(0, 10)}</p>
+            </div>
+          </div>
+          <div className="py-3">
+            <div className="flex items-center gap-5">
+              <h4 className="text-lg font-medium">O'zbekiston bo'ylab:</h4>
+              <p className="font-semibold text-blue-700">
+                UZS {data?.[data?.length - 1]?.price}
+              </p>
+            </div>
+            <div className="flex items-center gap-5">
+              <h4 className="text-lg font-medium">Tayinlangan sana:</h4>
+              <p>{data?.[data?.length - 1]?.created_at?.slice?.(0, 10)}</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>

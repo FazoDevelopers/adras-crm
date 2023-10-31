@@ -8,6 +8,7 @@ const index = () => {
   const [loading, setLoading] = useState(false);
   const [modalData, setModalData] = useState();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   async function getData() {
@@ -89,74 +90,88 @@ const index = () => {
 
   return (
     <div>
-      <details>
-        <summary className="text-3xl font-semibold mb-3">Yangi aksiya banner qo'shish:</summary>
-        <Form name="basic" onFinish={handleCreate} autoComplete="off">
-          <Form.Item
-            label="Nomi"
-            name="title"
-            rules={[
-              {
-                required: true,
-                message: "",
-              },
-            ]}
-          >
-            <Input className="border rounded border-blue-500 p-2" />
-          </Form.Item>
-          <Form.Item
-            label="Rasm"
-            name="image"
-            rules={[
-              {
-                required: true,
-                message: "",
-              },
-            ]}
-          >
-            <input
-              type="file"
-              name="image"
-              className="file:bg-transparent file:border-none w-full border rounded border-blue-500 p-2"
-              onChange={(e) => setImage(e.target.files[0])}
-            />
-          </Form.Item>
-          <Form.Item
-            label="Tafsilot"
-            name="text"
-            rules={[
-              {
-                required: true,
-                message: "",
-              },
-            ]}
-          >
-            <Input.TextArea className="border rounded border-blue-500 p-2" />
-          </Form.Item>
-          <Form.Item
-            label="Tugash sanasi"
-            name="time"
-            rules={[
-              {
-                required: true,
-                message: "",
-              },
-            ]}
-          >
-            <DatePicker className="w-full border rounded border-blue-500 p-2" />
-          </Form.Item>
-          <Form.Item>
-            <Button
-              loading={loading}
-              type="primary"
-              htmlType="submit"
-              className="bg-blue-500"
+      <div>
+        <Button
+          type="primary"
+          className="bg-blue-500 ml-auto"
+          icon={<span className="fa-solid fa-plus" />}
+          onClick={() => setIsAddModalOpen(true)}
+        >
+          Yangi aksiya banneri qo'shish
+        </Button>
+        <Modal
+          title="Aksiya banner qo'shish"
+          open={isAddModalOpen}
+          onCancel={() => setIsAddModalOpen(false)}
+          footer={[]}
+        >
+          <Form name="basic" onFinish={handleCreate} autoComplete="off">
+            <Form.Item
+              label="Nomi"
+              name="title"
+              rules={[
+                {
+                  required: true,
+                  message: "",
+                },
+              ]}
             >
-              Submit
-            </Button>
-          </Form.Item>
-        </Form>
-      </details>
+              <Input className="border rounded border-blue-500 p-2" />
+            </Form.Item>
+            <Form.Item
+              label="Rasm"
+              name="image"
+              rules={[
+                {
+                  required: true,
+                  message: "",
+                },
+              ]}
+            >
+              <input
+                type="file"
+                name="image"
+                className="file:bg-transparent file:border-none w-full border rounded border-blue-500 p-2"
+                onChange={(e) => setImage(e.target.files[0])}
+              />
+            </Form.Item>
+            <Form.Item
+              label="Tafsilot"
+              name="text"
+              rules={[
+                {
+                  required: true,
+                  message: "",
+                },
+              ]}
+            >
+              <Input.TextArea className="border rounded border-blue-500 p-2" />
+            </Form.Item>
+            <Form.Item
+              label="Tugash sanasi"
+              name="time"
+              rules={[
+                {
+                  required: true,
+                  message: "",
+                },
+              ]}
+            >
+              <DatePicker className="w-full border rounded border-blue-500 p-2" />
+            </Form.Item>
+            <Form.Item>
+              <Button
+                loading={loading}
+                type="primary"
+                htmlType="submit"
+                className="bg-blue-500"
+              >
+                Submit
+              </Button>
+            </Form.Item>
+          </Form>
+        </Modal>
+      </div>
       <div>
         <table className="w-full">
           <thead>
