@@ -44,7 +44,7 @@ const index = () => {
           ? news_products?.map?.((product, ind) => (
               <Card
                 key={ind}
-                data={{ ...product, badge: { text: "New", color: "red" } }}
+                data={{ ...product, badge: { text: "Yangi", color: "red" } }}
               />
             ))
           : new Array(5)

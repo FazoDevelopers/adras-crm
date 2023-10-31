@@ -3,24 +3,27 @@ import { Button, Form, Input, message, Modal, Select } from "antd";
 import { useEffect, useState } from "react";
 
 const index = () => {
+  const [form] = Form.useForm();
   const [messageApi, contextHolder] = message.useMessage();
   const [data, setData] = useState({
     products: [],
     categories: [],
     subcategories: [],
   });
+  const [pagination, setPagination] = useState({
+    next: null,
+    prev: null,
+  });
+  const [addedProductSlug, setAddedProductSlug] = useState();
   const [image, setImage] = useState();
   const [parentSlug, setParentSlug] = useState();
   const [slug, setSlug] = useState();
   const [loading, setLoading] = useState(false);
   const [modalData, setModalData] = useState();
-  const [pagination, setPagination] = useState({
-    next: null,
-    prev: null,
-  });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isVariantModalOpen, setIsVariantModalOpen] = useState(false);
 
   async function getData() {
     try {
@@ -120,6 +123,7 @@ const index = () => {
         data
       );
       if (response.status === 200) {
+        setAddedProductSlug(response?.data?.slug);
         getData();
         setImage(null);
         setSlug(null);
@@ -129,7 +133,19 @@ const index = () => {
         messageApi.success("Mahsulot qo'shildi!");
       }
     } catch (error) {
-      messageApi.error("Nimadadir xatolik ketdi!");
+      if (
+        error?.response?.data?.message?.startsWith(
+          `The image field must be a file`
+        )
+      ) {
+        messageApi.error(
+          "Kiritilgan rasm .jpeg, png, jpg, gif, svg turida bo'lishi kerak."
+        );
+      } else {
+        messageApi.error(
+          "Nimadadir xatolik ketdi! Kiritilgan ma'lumotlarni tekshiring va qaytadan uruning."
+        );
+      }
       setLoading(false);
     }
   }
@@ -191,7 +207,49 @@ const index = () => {
       return;
     }
   }
-  console.log(data?.subcategories);
+
+  async function handleAddVariant(values) {
+    setLoading(true);
+    let data = new FormData();
+    data.append("image", image);
+    data.append("name", values.name);
+    data.append("description", values.description);
+    data.append("price", values.price);
+    data.append("oldPrice", values.oldPrice);
+    data.append("product_slug", addedProductSlug);
+    if (!values.oldPrice) data.delete("oldPrice");
+    try {
+      let response = await axios.post(
+        `/admin/${localStorage.getItem("adras-token")}/product-type/store`,
+        data
+      );
+      if (response.status === 200) {
+        getData();
+        setImage(null);
+        form.resetFields();
+        setLoading(false);
+        messageApi.success(
+          "Mahsulot varianti qo'shildi! Yana qo'shish uchun formani to'ldiring."
+        );
+      }
+    } catch (error) {
+      if (
+        error?.response?.data?.message?.startsWith(
+          `The image field must be a file`
+        )
+      ) {
+        messageApi.error(
+          "Kiritilgan rasm .jpeg, png, jpg, gif, svg turida bo'lishi kerak."
+        );
+      } else {
+        messageApi.error(
+          "Nimadadir xatolik ketdi! Kiritilgan ma'lumotlarni tekshiring va qaytadan uruning."
+        );
+      }
+      setLoading(false);
+    }
+  }
+ 
   return (
     <div>
       {contextHolder}
@@ -209,6 +267,7 @@ const index = () => {
           title="Mahsulot qo'shish"
           open={isAddModalOpen}
           onCancel={() => setIsAddModalOpen(false)}
+          destroyOnClose={true}
           footer={[]}
         >
           <Form name="form" onFinish={handleCreate} autoComplete="off">
@@ -410,8 +469,8 @@ const index = () => {
                     className="h-full w-full object-cover object-center"
                   />
                 </div>
-                <p className="mt-4 line-clamp-1 text-sm">{item?.desc}</p>
-                <h3 className="mt-1 text-lg sm:text-xl font-medium text-gray-700">
+                <p className="mt-4 line-clamp-1 text-sm">{item?.description}</p>
+                <h3 className="mt-1 text-lg sm:text-xl line-clamp-1 font-medium text-gray-700">
                   {item?.name}
                 </h3>
                 {item?.shipping_price ? (
@@ -438,6 +497,15 @@ const index = () => {
                 </Button>
               </div>
               <div className="flex items-center justify-center flex-wrap gap-3 my-2">
+                {item?.types?.length > 0 && (
+                  <Button
+                    onClick={() => {
+                      setModalData(item?.types);
+                      setIsVariantModalOpen(true);
+                    }}
+                    icon={<span className="fa-solid fa-bars" />}
+                  />
+                )}
                 <Button
                   onClick={() => {
                     setModalData(item);
@@ -661,8 +729,169 @@ const index = () => {
             >
               Submit
             </Button>
+            <Button
+              htmlType="button"
+              className="ml-5"
+              onClick={()=>{
+                setAddedProductSlug(modalData?.slug)
+              }}
+              icon={<span className="fa-solid fa-plus"/>}
+            >
+              Variant qo'shish
+            </Button>
           </Form.Item>
         </Form>
+      </Modal>
+
+      {/* variant add */}
+      <Modal
+        title="Mahsulotga yangi variant qo'shish"
+        open={addedProductSlug}
+        onCancel={() => setAddedProductSlug(false)}
+        destroyOnClose={true}
+        footer={[]}
+      >
+        <Form
+          form={form}
+          name="variant"
+          onFinish={handleAddVariant}
+          autoComplete="off"
+        >
+          <Form.Item
+            label="Nomi"
+            name="name"
+            rules={[
+              {
+                required: true,
+                message: "",
+              },
+            ]}
+          >
+            <Input className="border rounded border-blue-500 p-2" />
+          </Form.Item>
+          <Form.Item
+            label="Tafsilot"
+            name="description"
+            rules={[
+              {
+                required: true,
+                message: "",
+              },
+            ]}
+          >
+            <Input.TextArea className="border rounded border-blue-500 p-2" />
+          </Form.Item>
+          <Form.Item
+            label="Narxi"
+            name="price"
+            rules={[
+              {
+                required: true,
+                message: "",
+              },
+            ]}
+          >
+            <Input
+              type="number"
+              min={0}
+              className="border rounded border-blue-500 p-2"
+            />
+          </Form.Item>
+          <Form.Item label="Eski narxi" name="oldPrice">
+            <Input
+              type="number"
+              min={0}
+              className="border rounded border-blue-500 p-2"
+            />
+          </Form.Item>
+          <Form.Item
+            label="Rasm"
+            name="image"
+            rules={[
+              {
+                required: true,
+                message: "",
+              },
+            ]}
+          >
+            <input
+              type="file"
+              name="image"
+              className="file:bg-transparent file:border-none w-full border rounded border-blue-500 p-2"
+              onChange={(e) => setImage(e.target.files[0])}
+            />
+          </Form.Item>
+          <Form.Item>
+            <Button
+              loading={loading}
+              type="primary"
+              htmlType="submit"
+              className="bg-blue-500"
+            >
+              Submit
+            </Button>
+            <Button
+              type="default"
+              htmlType="reset"
+              onClick={() => setAddedProductSlug(null)}
+              className="ml-5"
+            >
+              Cancel
+            </Button>
+          </Form.Item>
+        </Form>
+      </Modal>
+
+      {/* variant see */}
+      <Modal
+        title="Mahsulot variantlari"
+        open={isVariantModalOpen}
+        onCancel={() => setIsVariantModalOpen(false)}
+        okButtonProps={{ className: "bg-blue-500" }}
+      >
+        {modalData?.map?.((modalData, ind) => (
+          <>
+            <div className="w-full my-1">
+              <img
+                src={`https://api.abdullajonov.uz/adras-market-api/public/storage/images/${modalData?.image}`}
+                alt="image"
+                className="min-w-full w-full"
+              />
+            </div>
+            <table className="text-left w-full">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th className="py-1">Nomi:</th>
+                  <td>{modalData?.name}</td>
+                </tr>
+                <tr>
+                  <th className="py-1">Tafsiloti:</th>
+                  <td>{modalData?.description}</td>
+                </tr>
+                <tr>
+                  <th className="py-1">Narxi:</th>
+                  <td>{modalData?.price}</td>
+                </tr>
+                {modalData?.oldPrice && (
+                  <tr>
+                    <th className="py-1">Eski narxi:</th>
+                    <td>{modalData?.oldPrice}</td>
+                  </tr>
+                )}
+                <tr>
+                  <th className="py-1">Yaratilgan sana:</th>
+                  <td>{modalData?.created_at?.slice(0, 10)}</td>
+                </tr>
+              </tbody>
+            </table>
+          </>
+        ))}
       </Modal>
     </div>
   );
