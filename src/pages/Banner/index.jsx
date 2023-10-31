@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Button, Form, Input, Modal } from "antd";
+import { Button, Carousel, Form, Input, Modal } from "antd";
 import { useEffect, useState } from "react";
 
 const index = () => {
@@ -71,7 +71,9 @@ const index = () => {
   async function handleDelete(id) {
     try {
       let response = await axios.delete(
-        `/admin/${localStorage.getItem("adras-token")}/main-page-news/${id}/delete`
+        `/admin/${localStorage.getItem(
+          "adras-token"
+        )}/main-page-news/${id}/delete`
       );
       if (response.status === 200) {
         getData();
@@ -83,8 +85,8 @@ const index = () => {
 
   return (
     <div>
-      <details>
-        <summary className="text-3xl font-semibold mb-3">Yangi banner qo'shish:</summary>
+      <div>
+        <h3 className="text-3xl font-semibold mb-3">Yangi banner qo'shish:</h3>
         <Form name="basic" onFinish={handleCreate} autoComplete="off">
           <Form.Item
             label="Nomi"
@@ -126,8 +128,10 @@ const index = () => {
             </Button>
           </Form.Item>
         </Form>
-      </details>
-      <div>
+      </div>
+
+      {/* table */}
+      {/* <div>
         <table className="w-full">
           <thead>
             <tr className="border-b border-gray-400">
@@ -176,7 +180,8 @@ const index = () => {
             ))}
           </tbody>
         </table>
-      </div>
+      </div> */}
+
       <Modal
         title="Kategoriya"
         open={isModalOpen}
@@ -209,13 +214,14 @@ const index = () => {
           </tbody>
         </table>
       </Modal>
+
       <Modal
         title="Bannerni tahrirlash"
         open={isEditModalOpen}
         onCancel={() => setIsEditModalOpen(false)}
         footer={[]}
       >
-        <div className="w-full">
+        <div className="w-full my-2">
           Hozirgi rasm:
           <img
             src={`https://api.abdullajonov.uz/adras-market-api/public/storage/images/${modalData?.image}`}
@@ -250,6 +256,50 @@ const index = () => {
           </Form.Item>
         </Form>
       </Modal>
+
+      <Carousel draggable adaptiveHeight infinite accessibility autoplay>
+        {data?.map?.((item, ind) => {
+          return (
+            <div key={ind} className="h-96 w-full relative">
+              <img
+                src={`https://api.abdullajonov.uz/adras-market-api/public/storage/images/${item?.image}`}
+                alt="carousel image"
+                className="w-full h-[99%] rounded-lg aspect-video object-cover"
+              />
+              <div className="absolute inset-0 grid place-items-center">
+                <button
+                  type="outline"
+                  className="rounded-none border-2 border-black text-2xl px-3 py-1 font-semibold bg-white bg-opacity-50 backdrop-blur-sm"
+                >
+                  {item?.text}
+                  {/* <span className="fa-solid fa-arrow-right" /> */}
+                </button>
+              </div>
+              <div className="absolute top-0 p-1 rounded-lg bg-white flex items-center flex-wrap gap-3">
+                <Button
+                  onClick={() => {
+                    setModalData(item);
+                    setIsModalOpen(true);
+                  }}
+                  icon={<span className="fa-solid fa-eye" />}
+                />
+                <Button
+                  onClick={() => {
+                    setModalData(item);
+                    setIsEditModalOpen(true);
+                  }}
+                  icon={<span className="fa-solid fa-edit" />}
+                />
+                <Button
+                  onClick={() => handleDelete(item?.id)}
+                  danger
+                  icon={<span className="fa-solid fa-trash" />}
+                />
+              </div>
+            </div>
+          );
+        })}
+      </Carousel>
     </div>
   );
 };

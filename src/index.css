@@ -9,6 +9,7 @@ div:empty {
 
 body {
   font-family: "Noto Sans", sans-serif;
+  overflow-x: hidden;
 }
 
 body > .skiptranslate {
