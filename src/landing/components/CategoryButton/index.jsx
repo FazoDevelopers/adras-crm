@@ -13,7 +13,7 @@ const index = ({ id, img, title }) => {
           className="rounded-full aspect-1 object-cover ring-2 ring-secondary ring-offset-1 transition hover:ring-4 hover:ring-blue-600"
         />
       </div>
-      <p>{title}</p>
+      <p className="whitespace-nowrap">{title}</p>
     </Link>
   );
 };

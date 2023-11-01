@@ -31,6 +31,7 @@ const index = () => {
     data.append("image", image);
     data.append("text", values.text);
     data.append("title", values.title);
+    data.append("start_time", values.start_time);
     data.append("time", values.time);
     try {
       let response = await axios.post(
@@ -55,11 +56,13 @@ const index = () => {
     let data = new FormData();
     data.append("title", values.title);
     data.append("text", values.text);
+    data.append("start_time", values.start_time);
     data.append("time", values.time);
     data.append("image", image);
     if (!image) data.delete("image");
     if (!values.text) data.delete("text");
     if (!values.title) data.delete("title");
+    if (!values.start_time) data.delete("start_time");
     if (!values.time) data.delete("time");
     try {
       let response = await axios.post(
@@ -151,6 +154,18 @@ const index = () => {
               ]}
             >
               <Input.TextArea className="border rounded border-blue-500 p-2" />
+            </Form.Item>
+            <Form.Item
+              label="Boshlanish sanasi"
+              name="start_time"
+              rules={[
+                {
+                  required: true,
+                  message: "",
+                },
+              ]}
+            >
+              <DatePicker className="w-full border rounded border-blue-500 p-2" />
             </Form.Item>
             <Form.Item
               label="Tugash sanasi"

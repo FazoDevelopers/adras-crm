@@ -6,7 +6,6 @@ import { Card, CardPlaceholder } from "../../../components";
 const index = () => {
   const productsRef = useRef();
   const { most_sold } = useSelector((state) => state.data);
-
   return (
     <div>
       <div className="flex items-center justify-between">

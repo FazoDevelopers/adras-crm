@@ -1,4 +1,4 @@
-import { Button, Carousel } from "antd";
+import { Carousel } from "antd";
 import { useSelector } from "react-redux";
 
 const index = () => {

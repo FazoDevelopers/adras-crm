@@ -19,7 +19,7 @@ import {
   Subcategory as LandingSubcategory,
   BuyProduct as LandingBuyProduct,
 } from "./landing";
-import { setMainBanners, setNewProducts } from './redux'
+import { setMainBanners, setMostSold, setNewProducts, setStockBanners } from "./redux";
 import { useDispatch } from "react-redux";
 import axios from "axios";
 
@@ -30,7 +30,7 @@ const App = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [adminBlock, setAdminBlock] = useState(false);
   const navigate = useNavigate();
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const {
     token: { colorBgContainer },
   } = theme.useToken();
@@ -38,12 +38,15 @@ const App = () => {
   async function getAllDataForLanding() {
     try {
       let main_banners = await axios.get("/main-page-news/get");
+      let news_banners = await axios.get("/news/get");
       let new_products = await axios.get("/get-product-uz-new");
-
+      let most_sold = await axios.get("/product/get-ten");
       dispatch(setMainBanners(main_banners?.data?.data));
+      dispatch(setStockBanners(news_banners?.data?.news?.data));
       dispatch(setNewProducts(new_products?.data?.product?.data));
+      dispatch(setMostSold(most_sold?.data?.data));
     } catch (error) {
-      return
+      return;
     }
   }
 
@@ -55,8 +58,10 @@ const App = () => {
     } else {
       setAdminBlock(false);
     }
-    if(window.location.pathname.startsWith('/admin') === false){
-      getAllDataForLanding()
+    if (window.location.pathname.startsWith("/admin") === false) {
+      getAllDataForLanding();
+    }else {
+      getAllDataForLanding();
     }
   }, [window.location.pathname, adminBlock]);
 

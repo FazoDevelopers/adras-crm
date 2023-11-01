@@ -1,22 +1,8 @@
-import axios from "axios";
 import { Carousel } from "antd";
-import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
 const index = () => {
-  const [data, setData] = useState();
-
-  async function getData() {
-    try {
-      let { data } = await axios.get("/news/get");
-      setData(data?.news?.data);
-    } catch (error) {
-      return;
-    }
-  }
-
-  useEffect(() => {
-    getData();
-  }, []);
+  const { stock_banners } = useSelector((state) => state.data);
 
   return (
     <div className="w-full mx-auto px-3">
@@ -33,7 +19,7 @@ const index = () => {
         infinite
         autoplay
       >
-        {data?.map?.((item, ind) => {
+        {stock_banners?.map?.((item, ind) => {
           return (
             <div key={ind} className="relative h-96 w-full px-4 md:px-14">
               <img
@@ -46,7 +32,7 @@ const index = () => {
                   {item?.title}
                 </h3>
                 <h3 className="text-base md:text-xl font-bold font-serif px-3 mt-auto bg-white bg-opacity-70 backdrop-blur-sm rounded-t-lg">
-                  Tugash sanasi: {item?.time.slice(4,11)} 
+                  {item?.start_time?.slice(4, 11)} - {item?.time?.slice(4, 11)}
                 </h3>
               </div>
             </div>
