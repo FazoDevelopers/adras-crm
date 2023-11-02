@@ -40,19 +40,21 @@ const index = () => {
   async function handleCreate(values) {
     setLoading(true);
     let data = {
-      user_name: values.user_name,
-      product_slug: values.product_slug,
-      size: values.size,
+      name: values.name,
       phone: values.phone,
-      date: values.date,
+      location: values.location,
+      product_slug: values.product_slug,
+      price: values.price,
+      amount: values.amount,
     };
     try {
       let response = await axios.post(
         `/order/store`,
         data
       );
-      if (response.status === 200) {
+      if (response.status === 200 || response.status === 201) {
         getData();
+        messageApi.success("Buyurtma qo'shildi!");
         setLoading(false);
       }
     } catch (error) {
@@ -64,16 +66,21 @@ const index = () => {
   async function handleEdit(values) {
     setLoading(true);
     let data = {
-      amount: values.amount,
+      name: values.name,
+      phone: values.phone,
+      location: values.location,
       product_slug: values.product_slug,
-      start_time: values.start_time,
-      end_time: values.end_time,
+      price: values.price,
+      amount: values.amount,
     };
-    if (!values.start_time) delete data.start_time;
-    if (!values.end_time) delete data.end_time;
+    if (!values.name) delete data.name;
+    if (!values.phone) delete data.phone;
+    if (!values.location) delete data.location;
+    if (!values.price) delete data.price;
+    if (!values.amount) delete data.amount;
     try {
       let response = await axios.post(
-        `/admin/${localStorage.getItem("adras-token")}/discount/${
+        `/admin/${localStorage.getItem("adras-token")}/order/${
           modalData?.id
         }/update`,
         data
@@ -91,7 +98,7 @@ const index = () => {
   async function handleDelete(id) {
     try {
       let response = await axios.delete(
-        `/admin/${localStorage.getItem("adras-token")}/discount/${id}`
+        `/admin/${localStorage.getItem("adras-token")}/order/${id}/delete`
       );
       if (response.status === 200) {
         getData();
@@ -146,7 +153,7 @@ const index = () => {
           <Form name="basic" onFinish={handleCreate} autoComplete="off">
             <Form.Item
               label="Mijoz ismi"
-              name="user_name"
+              name="name"
               rules={[
                 {
                   required: true,
@@ -178,8 +185,8 @@ const index = () => {
               </Radio.Group>
             </Form.Item>
             <Form.Item
-              label="Soni"
-              name="size"
+              label="Miqdori"
+              name="amount"
               rules={[
                 {
                   required: true,
@@ -194,8 +201,8 @@ const index = () => {
               />
             </Form.Item>
             <Form.Item
-              label="Sana"
-              name="date"
+              label="Manzil"
+              name="location"
               rules={[
                 {
                   required: true,
@@ -203,7 +210,22 @@ const index = () => {
                 },
               ]}
             >
-              <DatePicker className="w-full border rounded border-blue-500 p-2" />
+              <Input.TextArea className="border rounded border-blue-500 p-2" />
+            </Form.Item>
+            <Form.Item
+              label="Telefon"
+              name="phone"
+              rules={[
+                {
+                  required: true,
+                  message: "",
+                },
+              ]}
+            >
+              <Input
+                prefix="+998"
+                className="border rounded border-blue-500 p-2"
+              />
             </Form.Item>
             <Form.Item>
               <Button
@@ -224,9 +246,12 @@ const index = () => {
             <tr className="border-b border-gray-400">
               <th className="py-5">#</th>
               <th>Mahsulot</th>
-              <th>Chegirma narxi</th>
-              <th>Boshlanish</th>
-              <th>Tugash</th>
+              <th>Miqdori</th>
+              <th>Narxi</th>
+              <th>Mijoz</th>
+              <th>Tel. raqam</th>
+              <th>Joylashuv</th>
+              <th>Sana</th>
               <th></th>
             </tr>
           </thead>
@@ -234,10 +259,13 @@ const index = () => {
             {data?.map?.((item, ind) => (
               <tr key={ind} className="text-center border-t">
                 <th className="py-3">{ind + 1}</th>
-                <th>{item?.product_slug}</th>
-                <th>{item?.amount}</th>
-                <th>{item?.start_time.slice(0, 10)}</th>
-                <th>{item?.end_time.slice(0, 10)}</th>
+                <th>{item?.product_slug?.slice(0, 20)}</th>
+                <td>{item?.amount}</td>
+                <td>UZS {item?.price}</td>
+                <td>{item?.name}</td>
+                <td>{item?.phone}</td>
+                <td>{item?.location}</td>
+                <td>{item?.created_at?.slice(0, 10)}</td>
                 <td className="w-52">
                   <div className="flex items-center flex-wrap gap-3">
                     <Button
@@ -263,26 +291,34 @@ const index = () => {
       <Modal
         title="Chegirmani tahrirlash"
         open={isEditModalOpen}
+        destroyOnClose
         onCancel={() => setIsEditModalOpen(false)}
         footer={[]}
       >
         <Form name="edit" onFinish={handleEdit} autoComplete="off">
-          <Form.Item label="Narxi" name="amount">
+          <Form.Item label="Mijoz ismi" name="name">
             <Input
-              defaultValue={modalData?.amount}
-              type="number"
+              defaultValue={modalData?.name}
               className="border rounded border-blue-500 p-2"
             />
           </Form.Item>
-          <Form.Item label="Boshlanish vaqti" name="start_time">
-            <DatePicker
-              type="number"
-              className="w-full border rounded border-blue-500 p-2"
+          <Form.Item label="Tel. raqam" name="phone">
+            <Input
+              defaultValue={modalData?.phone}
+              prefix="+998"
+              className="border rounded border-blue-500 p-2"
             />
           </Form.Item>
-          <Form.Item label="Tugash vaqti" name="end_time">
-            <DatePicker
+          <Form.Item label="Manzil" name="location">
+            <Input.TextArea
+              defaultValue={modalData?.location}
+              className="border rounded border-blue-500 p-2"
+            />
+          </Form.Item>
+          <Form.Item label="Mahsulot miqdori" name="amount">
+            <Input
               type="number"
+              defaultValue={modalData?.amount}
               className="w-full border rounded border-blue-500 p-2"
             />
           </Form.Item>
