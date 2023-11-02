@@ -28,7 +28,7 @@ const index = () => {
                 className="w-full h-4/5 md:h-3/4 aspect-video object-cover rounded-lg"
               />
               <div className="grid grid-cols-2 place-items-center z-10">
-                <h3 className="text-xl md:text-3xl font-bold px-3 mt-auto bg-white bg-opacity-70 backdrop-blur-sm rounded-t-lg">
+                <h3 className="text-xl md:text-3xl line-clamp-1 font-bold px-3 mt-auto bg-white bg-opacity-70 backdrop-blur-sm rounded-t-lg">
                   {item?.title}
                 </h3>
                 <h3 className="text-base md:text-xl font-bold font-serif px-3 mt-auto bg-white bg-opacity-70 backdrop-blur-sm rounded-t-lg">

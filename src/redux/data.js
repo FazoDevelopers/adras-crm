@@ -7,6 +7,7 @@ export const dataSlice = createSlice({
     news_products: [],
     stock_banners: [],
     most_sold: [],
+    categories: [],
   },
   reducers: {
     setMainBanners: (state, action) => {
@@ -21,10 +22,18 @@ export const dataSlice = createSlice({
     setMostSold: (state, action) => {
       state.most_sold = action.payload;
     },
+    setCategories: (state, action) => {
+      state.categories = action.payload;
+    },
   },
 });
 
-export const { setMainBanners, setNewProducts, setStockBanners, setMostSold } =
-  dataSlice.actions;
+export const {
+  setMainBanners,
+  setNewProducts,
+  setStockBanners,
+  setMostSold,
+  setCategories,
+} = dataSlice.actions;
 
 export default dataSlice.reducer;

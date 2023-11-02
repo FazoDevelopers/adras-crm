@@ -4,7 +4,7 @@ const index = ({ id, img, title }) => {
   return (
     <Link
       to={`/category/${id}`}
-      className="max-w-fit flex flex-col items-center gap-2"
+      className="max-w-fit flex flex-col items-center gap-2 my-3"
     >
       <div className="w-[70px]">
         <img

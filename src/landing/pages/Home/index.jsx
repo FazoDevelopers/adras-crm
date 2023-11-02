@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { Carousel } from 'antd'
 import {
-  Carousel,
+  Carousel as Car,
   CarouselPlaceholder,
   CategoryButton,
   CategoryButtonPlaceholder,
@@ -14,39 +14,24 @@ import Category from "./Category";
 import SecondCategory from "./SecondCategory";
 import Newsletter from "./Newsletter";
 import Top from "./Top";
-import axios from "axios";
 import { useSelector } from "react-redux";
 
 const index = () => {
-  const [categories, setCategories] = useState([]);
-  const { main_banners, stock_banners } = useSelector((state) => state.data);
-
-  async function getCategories() {
-    try {
-      let { data } = await axios.get("/parent-category/get");
-      setCategories(data?.data);
-    } catch (error) {
-      return;
-    }
-  }
-
-  useEffect(() => {
-    getCategories();
-  }, []);
+  const { main_banners, stock_banners, categories } = useSelector((state) => state.data);
 
   return (
     <>
       <Nav />
       <div className="my-10">
-        {main_banners.length > 0 ? <Carousel /> : <CarouselPlaceholder />}
+        {main_banners.length > 0 ? <Car /> : <CarouselPlaceholder />}
       </div>
       <div className="w-full md:w-4/5 mx-auto px-3 md:px-0">
-        <div className="flex  gap-x-6 gap-y-3 overflow-x-auto scrollbar-none py-4 px-3 my-20">
+        <Carousel draggable adaptiveHeight infinite accessibility autoplay slidesToShow={window.innerWidth > 1000 ? 5 : window.innerWidth > 600 ? 3 : 2}>
           {categories?.length > 0
             ? categories?.map?.((item, ind) => (
                 <CategoryButton
                   key={ind}
-                  id={item?.id}
+                  id={item?.slug}
                   title={item?.name}
                   img={item?.image}
                 />
@@ -54,7 +39,7 @@ const index = () => {
             : new Array(10)
                 .fill(null)
                 .map((_, ind) => <CategoryButtonPlaceholder key={ind} />)}
-        </div>
+        </Carousel>
         <div className="my-10">
           <NewItems />
         </div>
@@ -73,11 +58,11 @@ const index = () => {
         <Category />
       </div>
       <div>
-        <div className="my-10 pr-5 pl-5 lg:pl-0 mb-52 lg:mb-0 translate-y-1/3 lg:translate-y-0">
+        <div className="my-10 pr-5 pl-5 lg:pl-0 mb-[400px] lg:mb-0 -translate-y-1/3 lg:translate-y-0">
           <SecondCategory />
         </div>
       </div>
-      <div className="w-full md:w-4/5 mx-auto px-3 md:mt-20 max-[1024px]:mb-52 max-[600px]:mb-10 md:px-0 sm:translate-y-1/3 lg:translate-y-0">
+      <div className="w-full md:w-4/5 mx-auto px-3 md:mt-20 max-[1024px]:mb-52 max-[600px]:mb-10 max-[600px]:mt-[200px] md:px-0 sm:translate-y-1/3 lg:translate-y-0">
         <Newsletter />
       </div>
       <Footer />

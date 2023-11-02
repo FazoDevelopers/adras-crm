@@ -1,63 +1,57 @@
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { Card, Footer, Nav } from "../../components";
 
-const products = [
-  {
-    id: 2,
-    name: "Nomad Tumbler",
-    price: 35,
-    image:
-      "https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-02.jpg",
-    desc: "Olive drab green insulated bottle with flared screw lid and flat top.",
-  },
-  {
-    id: 1,
-    name: "Earthen Bottle",
-    price: 48,
-    discount: 55,
-    image:
-      "https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-01.jpg",
-    desc: "Tall slender porcelain bottle with natural clay textured body and cork stopper.",
-  },
-  {
-    id: 2,
-    name: "Nomad Tumbler",
-    price: 35,
-    image:
-      "https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-02.jpg",
-    desc: "Olive drab green insulated bottle with flared screw lid and flat top.",
-  },
-  {
-    id: 3,
-    name: "Focus Paper Refill",
-    price: 89,
-    discount: 125,
-    image:
-      "https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-03.jpg",
-    desc: "Person using a pen to cross a task off a productivity paper card.",
-  },
-  {
-    id: 4,
-    name: "Machined Mechanical Pencil",
-    price: 35,
-    image:
-      "https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-04.jpg",
-    desc: "Hand holding black machined steel mechanical pencil with brass tip and top.",
-  },
-];
-
 const index = () => {
   const { id: category } = useParams();
+  const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [curSubCategory, setSubCategory] = useState([]);
+
+  async function getSubCategories() {
+    try {
+      let { data } = await axios.get(`/child-category/get`);
+      setCategories(data?.data);
+    } catch (error) {
+      return;
+    }
+  }
+
+  async function getProducts() {
+    try {
+      let { data } = await axios.get(`/products/get-by-category/${category}`);
+      setProducts(data?.products?.data);
+    } catch (error) {
+      return;
+    }
+  }
+
+  function findSubCategory() {
+    console.log(categories);
+    categories.map((c) => {
+      console.log(c);
+        if(c.slug === category){
+        }
+    });
+  }
+
+  useEffect(() => {
+    // getProducts();
+    getSubCategories()
+    findSubCategory();
+  }, []);
 
   return (
     <>
       <Nav />
       <div className="w-full h-[60vh]">
-        <img
+        {/* <img
           src="/carousel-1.jpg"
           alt="category image"
           className="w-full max-h-full object-cover object-center"
-        />
+        /> */}
       </div>
       <div className="md:w-4/5 mx-auto">
         <h2 className="text-3xl font-semibold text-center my-5 md:text-5xl">

@@ -1,10 +1,12 @@
-import { Button, Form, Input } from "antd";
+import { Button, Form, Input, message } from "antd";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { decreaseQuantity, increaseQuantity, remove } from "../../../redux";
 import { useEffect, useState } from "react";
+import axios from "axios";
 
 const index = () => {
+  const [messageApi, contextHolder] = message.useMessage();
   const [form] = Form.useForm();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -12,8 +14,32 @@ const index = () => {
   const [totalPrice, setTotalPrice] = useState(0);
 
   async function handleSubmit() {
-    console.log(form.getFieldsError());
-    console.log(form.getFieldsValue());
+    if (
+      !form.getFieldsValue().name ||
+      !form.getFieldsValue().phone ||
+      !form.getFieldsValue().address
+    ) {
+      return messageApi.error("Formani to'liq to'ldiring!");
+    } else if (buying.length === 0) {
+      messageApi.error("Tanlangan mahsulotlar yo'q.");
+    }
+    try {
+      for (let i = 0; i <= buying.length; i++) {
+        let { data } = await axios.post("/order/store", {
+          name: form.getFieldsValue().name,
+          phone: form.getFieldsValue().phone,
+          location: form.getFieldsValue().address,
+          product_slug: buying[i].slug,
+          amount: buying[i].count,
+          price: buying[i].price,
+        });
+        if(data?.code === 201){
+          messageApi.success('Buyurtma qabul qilindi!')
+        };
+      }
+    } catch (error) {
+      return;
+    }
   }
 
   function calculateTotalPrice() {
@@ -33,6 +59,7 @@ const index = () => {
 
   return (
     <div className="py-10 w-11/12 md:w-3/4 mx-auto">
+      {contextHolder}
       <h2 className="text-2xl sm:text-4xl md:text-5xl text-center font-medium mb-5">
         Buyurtma berish
       </h2>
@@ -45,7 +72,7 @@ const index = () => {
             >
               <div className="flex flex-col gap-1">
                 <img
-                  src={item?.image}
+                  src={`https://api.abdullajonov.uz/adras-market-api/public/storage/images/${item?.image}`}
                   alt={item.name}
                   className="w-[110px] max-w-[110px] rounded-lg"
                 />
@@ -53,10 +80,10 @@ const index = () => {
               </div>
               <div className="flex flex-col gap-2">
                 <p className="line-clamp-2 text-sm">{item.desc}</p>
-                <p className="font-medium text-sm">SKU: {item.id}</p>
+                <p className="font-medium text-sm">SKU: {item.sku}</p>
                 <div className="flex items-center gap-3 text-sm">
                   <p className="font-medium">Price:</p>
-                  <span>${item.price * item.count}</span>
+                  <span>UZS {item.price * item.count}</span>
                 </div>
                 <div className="flex items-center gap-5">
                   <Button.Group>
@@ -159,7 +186,7 @@ const index = () => {
             <tr>
               <th className="py-3 text-left">Mahsulot umumiy narxi:</th>
               <td className="text-right">
-                $
+                UZS
                 {Number(
                   buying.reduce((a, b) => a + b.price * b.count, 0)
                 ).toFixed(2)}
@@ -167,12 +194,12 @@ const index = () => {
             </tr>
             <tr>
               <th className="py-3 text-left">Yetkazib berish narxi:</th>
-              <td className="text-right">$1.00</td>
+              <td className="text-right">UZS 10000.00</td>
             </tr>
             <tr>
               <th className="py-3 text-left">QQS narxi (4%):</th>
               <td className="text-right">
-                $
+                UZS
                 {(
                   (4 / 100) *
                   Number(buying.reduce((a, b) => a + b.price * b.count, 0))
@@ -181,11 +208,11 @@ const index = () => {
             </tr>
             <tr>
               <th className="py-3 text-left">Boshqalar:</th>
-              <td className="text-right">$0.00</td>
+              <td className="text-right">UZS 0.00</td>
             </tr>
             <tr className="border-t border-black">
               <th className="py-3 text-left">Jami:</th>
-              <td className="text-right">${totalPrice}</td>
+              <td className="text-right">UZS {totalPrice}</td>
             </tr>
           </tbody>
         </table>

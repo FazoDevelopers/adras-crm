@@ -22,6 +22,7 @@ import {
 import { setMainBanners, setMostSold, setNewProducts, setStockBanners } from "./redux";
 import { useDispatch } from "react-redux";
 import axios from "axios";
+import { setCategories } from "./redux/data";
 
 const { Header, Sider, Content } = Layout;
 
@@ -41,6 +42,8 @@ const App = () => {
       let news_banners = await axios.get("/news/get");
       let new_products = await axios.get("/get-product-uz-new");
       let most_sold = await axios.get("/product/get-ten");
+      let { data: cat } = await axios.get("/parent-category/get");
+      dispatch(setCategories(cat?.data));
       dispatch(setMainBanners(main_banners?.data?.data));
       dispatch(setStockBanners(news_banners?.data?.news?.data));
       dispatch(setNewProducts(new_products?.data?.product?.data));

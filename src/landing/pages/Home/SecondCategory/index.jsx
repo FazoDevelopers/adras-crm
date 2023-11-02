@@ -1,27 +1,21 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import "./index.css";
 
 const index = () => {
-  const [category, setCategory] = useState({});
+  const {categories} = useSelector((state)=>state.data);
   const [products, setProducts] = useState([]);
 
   async function getCategory() {
     try {
-      let { data } = await axios.get("/parent-category/get");
-      setCategory(data?.data);
-    } catch (error) {
-      return;
-    }
-  }
-
-  async function getProducts() {
-    try {
-      let { data } = await axios.get(
-        `/products/get-by-category/${category?.[1]?.child_categories?.[0]?.slug}`
-      );
-      setProducts(data?.products?.data);
+      setTimeout(async () => {
+        let { data } = await axios.get(
+          `/products/get-by-category/${categories?.[1]?.slug}`
+        );
+        setProducts(data?.products?.data);
+      }, 5000);
     } catch (error) {
       return;
     }
@@ -29,15 +23,11 @@ const index = () => {
 
   useEffect(() => {
     getCategory();
-  }, []);
-
-  useEffect(() => {
-    getProducts();
-  }, [category]);
+  }, [categories]);
 
   return (
     <>
-      {category?.[1] && (
+      {categories?.[1] && (
         <div className="grid gap-3 grid-cols-3 lg:grid-cols-4">
           <div className="z-10 flex max-[1024px]:col-span-3 lg:flex-col gap-3 md:gap-[53px] max-[1024px]:translate-y-[200%]">
             {products?.[0] && (
@@ -136,10 +126,10 @@ const index = () => {
           <div className="category-image-wrapper col-span-3 row-span-3 relative">
             <div className="category-main-image absolute -top-6 left-1/2 flex flex-col gap-3">
               <h3 className="text-3xl sm:text-5xl font-semibold">
-                {category?.[1]?.name}
+                {categories?.[1]?.name}
               </h3>
               <Link
-                to={`/category/${category?.[1]?.id}`}
+                to={`/category/${categories?.[1]?.id}`}
                 className="category-image-see-more text-lg"
               >
                 Mahsulotlarni ko'rish{" "}
@@ -147,9 +137,9 @@ const index = () => {
               </Link>
             </div>
             <img
-              src={`https://api.abdullajonov.uz/adras-market-api/public/storage/images/${category?.[1]?.image_2}`}
+              src={`https://api.abdullajonov.uz/adras-market-api/public/storage/images/${categories?.[1]?.image_2}`}
               alt="category image"
-              className="w-full rounded-lg"
+              className="w-full max-h-[400px] lg:min-h-full object-cover rounded-lg"
             />
           </div>
         </div>

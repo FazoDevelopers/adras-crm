@@ -1,6 +1,10 @@
 import React from "react";
+import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
 const index = () => {
+  const {categories} = useSelector((state)=>state.data)
+  
   return (
     <>
       <footer className="relative z-10 bg-white pt-20 pb-10 lg:pt-[120px] lg:pb-20">
@@ -11,9 +15,7 @@ const index = () => {
                 <a href="/#" className="mb-6 inline-block max-w-[160px]">
                   <img src="/logo.png" alt="logo" className="max-w-full" />
                 </a>
-                <p className="text-base mb-7">
-                  Adras Market.
-                </p>
+                <p className="text-base mb-7">Adras Market.</p>
                 <p className="flex items-center text-sm font-medium text-dark">
                   <span className="mr-3 text-primary">
                     <svg
@@ -33,10 +35,9 @@ const index = () => {
             </div>
 
             <LinkGroup header="Bo'limlar">
-              <NavLink link="/#" label="Parfume" />
-              <NavLink link="/#" label="lorem ipsum" />
-              <NavLink link="/#" label="dolor sit amet" />
-              <NavLink link="/#" label="ipsum amet" />
+              {categories.map((i, ind) => (
+                <NavLink key={ind} link={`category/${i?.slug}`} label={i?.name} />
+              ))}
             </LinkGroup>
 
             <div className="w-full px-4 sm:w-1/2 lg:w-3/12">
@@ -144,10 +145,10 @@ export default index;
 const LinkGroup = ({ children, header }) => {
   return (
     <>
-      <div className="w-full px-4 sm:w-1/2 lg:w-2/12">
+      <div className="w-full px-4 lg:w-5/12">
         <div className="w-full mb-10">
           <h4 className="text-lg font-semibold mb-9 text-dark"> {header} </h4>
-          <ul>{children}</ul>
+          <ul className="grid grid-cols-2">{children}</ul>
         </div>
       </div>
     </>
@@ -158,12 +159,12 @@ const NavLink = ({ link, label }) => {
   return (
     <div>
       <li>
-        <a
-          href={link}
-          className={`inline-block mb-2 text-base leading-loose text-body-color hover:text-primary`}
+        <Link
+          to={link}
+          className={`inline-block mb-2 text-base leading-loose text-body-color hover:text-primary whitespace-nowrap`}
         >
           {label}
-        </a>
+        </Link>
       </li>
     </div>
   );

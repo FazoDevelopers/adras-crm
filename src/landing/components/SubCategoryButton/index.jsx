@@ -6,14 +6,14 @@ const index = ({to, image, title}) => {
       to={`/subcategory/${to}`}
       className="flex items-center gap-3 border border-gray-600 rounded-full p-1 pr-3"
     >
-      <div className="max-w-[70px] ">
+      <div className="w-[70px] ">
         <img
           src={image}
           alt="category image"
-          className="w-full rounded-full aspect-square object-cover ring-2 ring-secondary ring-offset-1 transition hover:ring-4 hover:ring-blue-600"
+          className="w-full rounded-full aspect-1 object-cover ring-2 ring-secondary ring-offset-1 transition hover:ring-4 hover:ring-blue-600"
         />
       </div>
-      <p>{title}</p>
+      <p className="whitespace-nowrap">{title}</p>
     </Link>
   );
 };
