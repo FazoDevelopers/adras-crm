@@ -46,7 +46,7 @@ const index = () => {
       <div className="flex gap-x-6 gap-y-3 overflow-x-auto scrollbar-none my-10">
         {curCategory?.child_categories?.map?.((i, ind) => (
           <SubCategoryButton
-            to={"subcategory-1"}
+            to={`${i?.slug}`}
             image={`https://api.abdullajonov.uz/adras-market-api/public/storage/images/${i?.image}`}
             title={i?.name}
           />

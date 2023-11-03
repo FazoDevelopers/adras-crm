@@ -21,37 +21,40 @@ const index = () => {
 
   async function getProducts() {
     try {
-      let { data } = await axios.get(`/products/get-by-category/${category}`);
+      let { data } = await axios.get(`/products/get-by-parent-category/${category}`);
       setProducts(data?.products?.data);
     } catch (error) {
       return;
     }
   }
 
-  function findSubCategory() {
-    console.log(categories);
-    categories.map((c) => {
-      console.log(c);
-        if(c.slug === category){
-        }
-    });
+  function findSubcategory(){
+    categories?.map((c)=>{
+      if(c?.slug === category){
+        setSubCategory(c);
+      }
+    })
   }
 
   useEffect(() => {
-    // getProducts();
+    getProducts();
+    findSubcategory()
     getSubCategories()
-    findSubCategory();
   }, []);
+
+  useEffect(() => {
+    findSubcategory()
+  }, [categories]);
 
   return (
     <>
       <Nav />
       <div className="w-full h-[60vh]">
-        {/* <img
-          src="/carousel-1.jpg"
+        <img
+          src={`https://api.abdullajonov.uz/adras-market-api/public/storage/images/${curSubCategory?.image_2}`}
           alt="category image"
           className="w-full max-h-full object-cover object-center"
-        /> */}
+        />
       </div>
       <div className="md:w-4/5 mx-auto">
         <h2 className="text-3xl font-semibold text-center my-5 md:text-5xl">

@@ -3,8 +3,8 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 const index = () => {
-  const {categories} = useSelector((state)=>state.data)
-  
+  const { categories } = useSelector((state) => state.data);
+
   return (
     <>
       <footer className="relative z-10 bg-white pt-20 pb-10 lg:pt-[120px] lg:pb-20">
@@ -51,25 +51,36 @@ const index = () => {
                 </h4>
                 <div className="flex items-center mb-6">
                   <a
-                    href="/#"
+                    href="https://www.facebook.com/profile.php?id=61551431678851&mibextid=ZbWKwL"
+                    target={"_blank"}
                     className="mr-3 flex h-8 w-8 items-center justify-center rounded-full border border-[#E5E5E5] text-dark hover:border-primary hover:bg-primary hover:text-white sm:mr-4 lg:mr-3 xl:mr-4"
                   >
                     <span className="fa-brands fa-facebook-f" />
                   </a>
                   <a
-                    href="/#"
+                    href="https://twitter.com/UmarxonIsmoilov"
+                    target={"_blank"}
                     className="mr-3 flex h-8 w-8 items-center justify-center rounded-full border border-[#E5E5E5] text-dark hover:border-primary hover:bg-primary hover:text-white sm:mr-4 lg:mr-3 xl:mr-4"
                   >
                     <span className="fa-brands fa-twitter" />
                   </a>
                   <a
-                    href="/#"
+                    href="https://www.instagram.com/adras.market/"
+                    target={"_blank"}
                     className="mr-3 flex h-8 w-8 items-center justify-center rounded-full border border-[#E5E5E5] text-dark hover:border-primary hover:bg-primary hover:text-white sm:mr-4 lg:mr-3 xl:mr-4"
                   >
                     <span className="fa-brands fa-instagram" />
                   </a>
                   <a
-                    href="/#"
+                    href="https://www.threads.net/@adras.market"
+                    target={"_blank"}
+                    className="mr-3 flex h-8 w-8 items-center justify-center rounded-full border border-[#E5E5E5] text-dark hover:border-primary hover:bg-primary hover:text-white sm:mr-4 lg:mr-3 xl:mr-4"
+                  >
+                    <span className="fa-brands fa-threads" />
+                  </a>
+                  <a
+                    href="https://t.me/adras_market"
+                    target={"_blank"}
                     className="mr-3 flex h-8 w-8 items-center justify-center rounded-full border border-[#E5E5E5] text-dark hover:border-primary hover:bg-primary hover:text-white sm:mr-4 lg:mr-3 xl:mr-4"
                   >
                     <span className="fa-solid fa-paper-plane" />
