@@ -1,7 +1,7 @@
 import { Button, Form, Input, message } from "antd";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { decreaseQuantity, increaseQuantity, remove } from "../../../redux";
+import { clear, decreaseQuantity, increaseQuantity, remove } from "../../../redux";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
@@ -37,6 +37,7 @@ const index = () => {
           messageApi.success("Buyurtma qabul qilindi!");
         }
       }
+      dispatch(clear())
       navigate("/");
     } catch (error) {
       messageApi.success("Nimadadir xatolik ketdi! Qaytadan uruning.");

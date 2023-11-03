@@ -163,7 +163,7 @@ const LinkGroup = ({ children, header }) => {
       <div className="w-full px-4 min-[1200px]:w-6/12">
         <div className="w-full mb-10">
           <h4 className="text-lg font-semibold mb-9 text-dark"> {header} </h4>
-          <ul className="grid grid-cols-2 gap-x-12">{children}</ul>
+          <ul className="grid sm:grid-cols-2 gap-x-12">{children}</ul>
         </div>
       </div>
     </>

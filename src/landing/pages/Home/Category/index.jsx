@@ -44,7 +44,7 @@ const index = () => {
           className="w-full max-h-[400px] lg:min-h-full object-cover rounded-lg border border-gray-400"
         />
       </div>
-      <div className="flex overflow-x-auto scrollbar-thin scrollbar-track-yellow-200 scrollbar-thumb-slate-300 max-[700px]:col-span-1 max-[1024px]:col-span-3 lg:flex-col gap-3 md:gap-[53px] max-[1024px]:-translate-y-1/2">
+      <div className="flex overflow-x-auto scrollbar-thin scrollbar-track-transparent scrollbar-thumb-slate-300 max-[1024px]:col-span-3 lg:flex-col gap-3 md:gap-[53px] max-[1024px]:-translate-y-1/2">
         {products?.[0] && (
           <Link
             to={`/category/${categories?.[0]?.slug}`}

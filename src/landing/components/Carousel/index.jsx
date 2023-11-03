@@ -20,12 +20,12 @@ const index = () => {
               <img
                 src={`https://api.abdullajonov.uz/adras-market-api/public/storage/images/${item?.image}`}
                 alt="carousel image"
-                className="w-full h-[99%] rounded-lg aspect-video object-cover"
+                className="w-full h-[99%] rounded-lg aspect-video object-cover object-right sm:object-center"
               />
               <div className="absolute inset-0 grid place-items-center">
                 <button
                   type="outline"
-                  className="rounded-none border-2 border-black text-2xl px-3 py-1 font-semibold bg-white bg-opacity-50 backdrop-blur-sm"
+                  className="hidden sm:block rounded-none border-2 border-black text-2xl px-3 py-1 font-semibold bg-white bg-opacity-50 backdrop-blur-sm"
                 >
                   {item?.text}
                   {/* <span className="fa-solid fa-arrow-right" /> */}
