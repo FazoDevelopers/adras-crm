@@ -29,7 +29,7 @@ const index = () => {
     <>
       {categories?.[1] && (
         <div className="grid gap-3 grid-cols-3 lg:grid-cols-4">
-          <div className="z-10 flex overflow-x-auto scrollbar-thin scrollbar-track-transparent scrollbar-thumb-slate-500 max-[1024px]:col-span-3 lg:flex-col gap-3 md:gap-[53px] max-[1024px]:translate-y-[200%]">
+          <div className="z-10 flex overflow-x-auto scrollbar-thin scrollbar-track-transparent scrollbar-thumb-slate-500 max-[1024px]:col-span-3 lg:flex-col gap-3 md:gap-[53px] max-[1000px]:translate-y-[150%] max-[1024px]:translate-y-[200%]">
             {products?.[0] && (
               <Link to={`/category/${categories?.[1]?.slug}`} className="bg-white grid lg:grid-cols-2 gap-2 border rounded-lg p-1">
                 <div className="w-[200px] lg:w-full">
