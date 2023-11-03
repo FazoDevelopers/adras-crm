@@ -33,11 +33,13 @@ const index = () => {
           amount: buying[i].count,
           price: buying[i].price,
         });
-        if(data?.code === 201){
-          messageApi.success('Buyurtma qabul qilindi!')
-        };
+        if (data?.code === 201) {
+          messageApi.success("Buyurtma qabul qilindi!");
+        }
       }
+      navigate("/");
     } catch (error) {
+      messageApi.success("Nimadadir xatolik ketdi! Qaytadan uruning.");
       return;
     }
   }

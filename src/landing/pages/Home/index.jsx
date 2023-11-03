@@ -26,7 +26,7 @@ const index = () => {
         {main_banners.length > 0 ? <Car /> : <CarouselPlaceholder />}
       </div>
       <div className="w-full md:w-4/5 mx-auto px-3 md:px-0">
-        <Carousel draggable adaptiveHeight infinite accessibility autoplay slidesToShow={window.innerWidth > 1000 ? 5 : window.innerWidth > 600 ? 3 : 2}>
+        <Carousel draggable adaptiveHeight infinite centerMode accessibility autoplay slidesToShow={window.innerWidth > 1000 ? 4 : window.innerWidth > 600 ? 3 : 1}>
           {categories?.length > 0
             ? categories?.map?.((item, ind) => (
                 <CategoryButton

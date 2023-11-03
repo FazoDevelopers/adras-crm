@@ -7,40 +7,40 @@ import { Card, Footer, Nav, SubCategoryButton } from "../../components";
 
 const index = () => {
   const { id: category } = useParams();
-  const {categories} = useSelector((state)=>state.data)
-  const [products, setProducts] = useState([])
-  const [curCategory, setCategory] = useState([])
+  const { categories } = useSelector((state) => state.data);
+  const [products, setProducts] = useState([]);
+  const [curCategory, setCategory] = useState([]);
 
-  async function getProducts(){
+  async function getProducts() {
     try {
-      let {data} = await axios.get(`/products/get-by-category/${category}`)
+      let { data } = await axios.get(`/products/get-by-category/${category}`);
       setProducts(data?.products?.data);
     } catch (error) {
-      return
+      return;
     }
   }
 
-  function findCategory(){
-    categories.forEach(i => {
-      if(i?.slug === category){
-        setCategory(i)
+  function findCategory() {
+    categories.forEach((i) => {
+      if (i?.slug === category) {
+        setCategory(i);
       }
     });
   }
 
-  useEffect(()=>{
-    getProducts()
-    findCategory()
-  },[])
+  useEffect(() => {
+    getProducts();
+    findCategory();
+  }, []);
 
   return (
     <>
       <Nav />
-      <div className="w-full h-[60vh]">
+      <div className="w-full h-[70vh]">
         <img
           src={`https://api.abdullajonov.uz/adras-market-api/public/storage/images/${curCategory?.image_2}`}
           alt="category image"
-          className="w-full max-h-full object-cover object-center"
+          className="w-full h-full object-cover object-center"
         />
       </div>
       <div className="flex gap-x-6 gap-y-3 overflow-x-auto scrollbar-none my-10">

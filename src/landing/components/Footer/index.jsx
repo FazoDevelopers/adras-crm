@@ -10,7 +10,7 @@ const index = () => {
       <footer className="relative z-10 bg-white pt-20 pb-10 lg:pt-[120px] lg:pb-20">
         <div className="container">
           <div className="flex justify-between flex-wrap">
-            <div className="w-full px-4 sm:w-2/3 lg:w-3/12">
+            <div className="w-full px-4 min-[1200px]:w-3/12">
               <div className="w-full mb-10">
                 <a href="/#" className="mb-6 inline-block max-w-[160px]">
                   <img src="/logo.png" alt="logo" className="max-w-full" />
@@ -36,11 +36,15 @@ const index = () => {
 
             <LinkGroup header="Bo'limlar">
               {categories.map((i, ind) => (
-                <NavLink key={ind} link={`category/${i?.slug}`} label={i?.name} />
+                <NavLink
+                  key={ind}
+                  link={`category/${i?.slug}`}
+                  label={i?.name}
+                />
               ))}
             </LinkGroup>
 
-            <div className="w-full px-4 sm:w-1/2 lg:w-3/12">
+            <div className="w-full px-4 min-[1200px]:w-3/12">
               <div className="w-full mb-10">
                 <h4 className="text-lg font-semibold mb-9 text-dark">
                   Bizni kuzatib boring
@@ -145,10 +149,10 @@ export default index;
 const LinkGroup = ({ children, header }) => {
   return (
     <>
-      <div className="w-full px-4 lg:w-5/12">
+      <div className="w-full px-4 min-[1200px]:w-6/12">
         <div className="w-full mb-10">
           <h4 className="text-lg font-semibold mb-9 text-dark"> {header} </h4>
-          <ul className="grid grid-cols-2">{children}</ul>
+          <ul className="grid grid-cols-2 gap-x-12">{children}</ul>
         </div>
       </div>
     </>

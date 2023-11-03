@@ -24,14 +24,14 @@ const index = () => {
   }, [categories]);
 
   return (
-    <div className="grid gap-3 grid-cols-3 lg:grid-cols-4">
+    <div className="grid gap-3 max-[700px]:grid-cols-2 grid-cols-3 lg:grid-cols-4">
       <div className="category-image-wrapper col-span-3 row-span-3 relative">
         <div className="category-main-image absolute -top-6 right-6 flex flex-col gap-3">
           <h3 className="text-3xl sm:text-5xl font-semibold">
             {categories?.[0]?.name}
           </h3>
           <Link
-            to={`/category/${categories?.[0]?.id}`}
+            to={`/category/${categories?.[0]?.slug}`}
             className="category-image-see-more text-lg bg-white bg-opacity-50"
           >
             Mahsulotlarni ko'rish{" "}
@@ -44,10 +44,13 @@ const index = () => {
           className="w-full max-h-[400px] lg:min-h-full object-cover rounded-lg border border-gray-400"
         />
       </div>
-      <div className="flex max-[1024px]:col-span-3 lg:flex-col gap-3 md:gap-[53px] max-[1024px]:-translate-y-1/2">
+      <div className="flex overflow-x-auto scrollbar-thin scrollbar-track-yellow-200 scrollbar-thumb-slate-300 max-[700px]:col-span-1 max-[1024px]:col-span-3 lg:flex-col gap-3 md:gap-[53px] max-[1024px]:-translate-y-1/2">
         {products?.[0] && (
-          <div className="bg-white grid lg:grid-cols-2 gap-2 border rounded-lg p-1">
-            <div className="w-[250px] lg:w-full">
+          <Link
+            to={`/category/${categories?.[0]?.slug}`}
+            className="bg-white grid lg:grid-cols-2 gap-2 border rounded-lg p-1"
+          >
+            <div className="w-[200px] lg:w-full">
               <img
                 src={`https://api.abdullajonov.uz/adras-market-api/public/storage/images/${products?.[0]?.image}`}
                 alt="cateogry product image"
@@ -64,11 +67,14 @@ const index = () => {
                 {products?.[0]?.description}{" "}
               </p>
             </div>
-          </div>
+          </Link>
         )}
         {products?.[1] && (
-          <div className="bg-white grid lg:grid-cols-2 gap-2 border rounded-lg p-1">
-            <div className="w-[250px] lg:w-full">
+          <Link
+            to={`/category/${categories?.[0]?.slug}`}
+            className="bg-white grid lg:grid-cols-2 gap-2 border rounded-lg p-1"
+          >
+            <div className="max-sm:w-[200px] lg:w-full">
               <img
                 src={`https://api.abdullajonov.uz/adras-market-api/public/storage/images/${products?.[1]?.image}`}
                 alt="cateogry product image"
@@ -85,11 +91,14 @@ const index = () => {
                 {products?.[1]?.description}
               </p>
             </div>
-          </div>
+          </Link>
         )}
         {products?.[2] && (
-          <div className="bg-white hidden sm:grid lg:grid-cols-2 gap-2 border rounded-lg p-1">
-            <div className="w-[250px] lg:w-full">
+          <Link
+            to={`/category/${categories?.[0]?.slug}`}
+            className="bg-white grid lg:grid-cols-2 gap-2 border rounded-lg p-1"
+          >
+            <div className="w-[200px] lg:w-full">
               <img
                 src={`https://api.abdullajonov.uz/adras-market-api/public/storage/images/${products?.[2]?.image}`}
                 alt="cateogry product image"
@@ -106,11 +115,14 @@ const index = () => {
                 {products?.[2]?.description}
               </p>
             </div>
-          </div>
+          </Link>
         )}
         {products?.[3] && (
-          <div className="bg-white hidden lg:grid md:grid-cols-2 gap-2 border rounded-lg p-1">
-            <div className="w-[250px] lg:w-full">
+          <Link
+            to={`/category/${categories?.[0]?.slug}`}
+            className="bg-white grid md:grid-cols-2 gap-2 border rounded-lg p-1"
+          >
+            <div className="w-[200px] lg:w-full">
               <img
                 src={`https://api.abdullajonov.uz/adras-market-api/public/storage/images/${products?.[3]?.image}`}
                 alt="cateogry product image"
@@ -127,7 +139,7 @@ const index = () => {
                 {products?.[3]?.description}
               </p>
             </div>
-          </div>
+          </Link>
         )}
       </div>
     </div>

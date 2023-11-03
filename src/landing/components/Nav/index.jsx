@@ -6,8 +6,7 @@ const index = () => {
   const googleTranslateElementInit = () => {
     new window.google.translate.TranslateElement(
       {
-        pageLanguage: "uz",
-        autoDisplay: false,
+        pageLanguage: "eng",
       },
       "google_translate_element"
     );

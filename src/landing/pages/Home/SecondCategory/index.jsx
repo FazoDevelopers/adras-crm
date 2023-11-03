@@ -29,10 +29,10 @@ const index = () => {
     <>
       {categories?.[1] && (
         <div className="grid gap-3 grid-cols-3 lg:grid-cols-4">
-          <div className="z-10 flex max-[1024px]:col-span-3 lg:flex-col gap-3 md:gap-[53px] max-[1024px]:translate-y-[200%]">
+          <div className="z-10 flex overflow-x-auto scrollbar-thin scrollbar-track-transparent scrollbar-thumb-slate-500 max-[1024px]:col-span-3 lg:flex-col gap-3 md:gap-[53px] max-[1024px]:translate-y-[200%]">
             {products?.[0] && (
-              <div className="bg-white grid lg:grid-cols-2 gap-2 border rounded-lg p-1">
-                <div className="w-[250px] lg:w-full h-[170px]">
+              <Link to={`/category/${categories?.[1]?.slug}`} className="bg-white grid lg:grid-cols-2 gap-2 border rounded-lg p-1">
+                <div className="w-[200px] lg:w-full">
                   <img
                     src={`https://api.abdullajonov.uz/adras-market-api/public/storage/images/${products?.[0]?.image}`}
                     alt="cateogry product image"
@@ -51,11 +51,14 @@ const index = () => {
                     {products?.[0]?.description}{" "}
                   </p>
                 </div>
-              </div>
+              </Link>
             )}
             {products?.[1] && (
-              <div className="bg-white grid lg:grid-cols-2 gap-2 border rounded-lg p-1">
-                <div className="w-[250px] lg:w-full">
+              <Link
+                to={`/category/${categories?.[1]?.slug}`}
+                className="bg-white grid lg:grid-cols-2 gap-2 border rounded-lg p-1"
+              >
+                <div className="w-[200px] lg:w-full">
                   <img
                     src={`https://api.abdullajonov.uz/adras-market-api/public/storage/images/${products?.[1]?.image}`}
                     alt="cateogry product image"
@@ -74,11 +77,14 @@ const index = () => {
                     {products?.[1]?.description}
                   </p>
                 </div>
-              </div>
+              </Link>
             )}
             {products?.[2] && (
-              <div className="bg-white hidden sm:grid lg:grid-cols-2 gap-2 border rounded-lg p-1">
-                <div className="w-[250px] lg:w-full">
+              <Link
+                to={`/category/${categories?.[1]?.slug}`}
+                className="bg-white grid lg:grid-cols-2 gap-2 border rounded-lg p-1"
+              >
+                <div className="w-[200px] lg:w-full">
                   <img
                     src={`https://api.abdullajonov.uz/adras-market-api/public/storage/images/${products?.[2]?.image}`}
                     alt="cateogry product image"
@@ -97,11 +103,14 @@ const index = () => {
                     {products?.[2]?.description}
                   </p>
                 </div>
-              </div>
+              </Link>
             )}
             {products?.[3] && (
-              <div className="bg-white hidden lg:grid md:grid-cols-2 gap-2 border rounded-lg p-1">
-                <div className="w-[250px] lg:w-full">
+              <Link
+                to={`/category/${categories?.[1]?.slug}`}
+                className="bg-white grid md:grid-cols-2 gap-2 border rounded-lg p-1"
+              >
+                <div className="w-[200px] lg:w-full">
                   <img
                     src={`https://api.abdullajonov.uz/adras-market-api/public/storage/images/${products?.[3]?.image}`}
                     alt="cateogry product image"
@@ -120,7 +129,7 @@ const index = () => {
                     {products?.[3]?.description}
                   </p>
                 </div>
-              </div>
+              </Link>
             )}
           </div>
           <div className="category-image-wrapper col-span-3 row-span-3 relative">
@@ -129,7 +138,7 @@ const index = () => {
                 {categories?.[1]?.name}
               </h3>
               <Link
-                to={`/category/${categories?.[1]?.id}`}
+                to={`/category/${categories?.[1]?.slug}`}
                 className="category-image-see-more text-lg"
               >
                 Mahsulotlarni ko'rish{" "}
