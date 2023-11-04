@@ -29,6 +29,7 @@ const index = () => {
           name: form.getFieldsValue().name,
           phone: form.getFieldsValue().phone,
           location: form.getFieldsValue().address,
+          product_name: buying[i].name,
           product_slug: buying[i].slug,
           amount: buying[i].count,
           price: buying[i].price,
@@ -51,7 +52,7 @@ const index = () => {
     );
     let qqsPrice =
       (4 / 100) * Number(buying.reduce((a, b) => a + b.price * b.count, 0));
-    let shipmentPrice = 1;
+    let shipmentPrice = 10000;
 
     setTotalPrice(Number(productsPrice + qqsPrice + shipmentPrice).toFixed(2));
   }

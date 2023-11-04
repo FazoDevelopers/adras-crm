@@ -1,9 +1,17 @@
 import axios from "axios";
-import { Button, DatePicker, Form, Input, message, Modal, Radio, Select } from "antd";
+import {
+  Button,
+  DatePicker,
+  Form,
+  Input,
+  message,
+  Modal,
+  Radio,
+  Select,
+} from "antd";
 import { useEffect, useState } from "react";
 
 const index = () => {
-  
   const [messageApi, contextHolder] = message.useMessage();
   const [data, setData] = useState([]);
   const [products, setProducts] = useState([]);
@@ -15,7 +23,9 @@ const index = () => {
 
   async function getData() {
     try {
-      let order = await axios.get(`/admin/${localStorage.getItem('adras-token')}/order/get`);
+      let order = await axios.get(
+        `/admin/${localStorage.getItem("adras-token")}/order/get`
+      );
       setData(order?.data?.data);
     } catch (error) {
       return;
@@ -48,10 +58,7 @@ const index = () => {
       amount: values.amount,
     };
     try {
-      let response = await axios.post(
-        `/order/store`,
-        data
-      );
+      let response = await axios.post(`/order/store`, data);
       if (response.status === 200 || response.status === 201) {
         getData();
         messageApi.success("Buyurtma qo'shildi!");
@@ -259,7 +266,7 @@ const index = () => {
             {data?.map?.((item, ind) => (
               <tr key={ind} className="text-center border-t">
                 <th className="py-3">{ind + 1}</th>
-                <th>{item?.product_slug?.slice(0, 20)}</th>
+                <th>{item?.product_name?.slice?.(0, 20)}</th>
                 <td>{item?.amount}</td>
                 <td>UZS {item?.price}</td>
                 <td>{item?.name}</td>
