@@ -10,7 +10,7 @@ const index = ({ id, img, title }) => {
         <img
           src={`https://api.abdullajonov.uz/adras-market-api/public/storage/images/${img}`}
           alt="category image"
-          className="rounded-full aspect-1 object-cover ring-2 ring-secondary ring-offset-1 transition hover:ring-4 hover:ring-blue-600"
+          className="rounded-full w-[70px] h-[70px] object-cover ring-2 ring-secondary ring-offset-1 transition hover:ring-4 hover:ring-blue-600"
         />
       </div>
       <p className="whitespace-nowrap">{title}</p>

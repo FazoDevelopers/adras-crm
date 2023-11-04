@@ -10,10 +10,9 @@ import {
   StockCarouselPlaceholder,
 } from "../../components";
 import NewItems from "./NewItems";
-import Category from "./Category";
-import SecondCategory from "./SecondCategory";
 import Newsletter from "./Newsletter";
 import Top from "./Top";
+import CategorySlider from "./CategorySlider";
 import { useSelector } from "react-redux";
 
 const index = () => {
@@ -26,7 +25,17 @@ const index = () => {
         {main_banners.length > 0 ? <Car /> : <CarouselPlaceholder />}
       </div>
       <div className="w-full md:w-4/5 mx-auto px-3 md:px-0">
-        <Carousel draggable adaptiveHeight infinite centerMode accessibility autoplay slidesToShow={window.innerWidth > 1000 ? 4 : window.innerWidth > 600 ? 3 : 1}>
+        <Carousel
+          draggable
+          adaptiveHeight
+          infinite
+          centerMode
+          accessibility
+          autoplay
+          slidesToShow={
+            window.innerWidth > 1000 ? 4 : window.innerWidth > 600 ? 3 : 1
+          }
+        >
           {categories?.length > 0
             ? categories?.map?.((item, ind) => (
                 <CategoryButton
@@ -53,14 +62,12 @@ const index = () => {
         <div className="my-10">
           <Top />
         </div>
-      </div>
-      <div className="my-10 mt-20 pr-5 pl-5 lg:pl-0">
-        <Category />
-      </div>
-      <div>
-        <div className="my-10 pr-5 pl-5 lg:pl-0 mb-[400px] lg:mb-0 -translate-y-1/3 lg:translate-y-0">
-          <SecondCategory />
-        </div>
+        {categories?.length > 0 &&
+          categories?.map?.((item, ind) => (
+            <div className="my-20">
+              <CategorySlider key={ind} data={item} />
+            </div>
+          ))}
       </div>
       <div className="w-full md:w-4/5 mx-auto px-3 md:mt-20 max-[1024px]:mb-52 max-[600px]:mb-10 max-[600px]:mt-[200px] md:px-0 sm:translate-y-1/3 lg:translate-y-0">
         <Newsletter />

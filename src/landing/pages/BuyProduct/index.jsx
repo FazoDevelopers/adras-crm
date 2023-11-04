@@ -1,7 +1,12 @@
 import { Button, Form, Input, message } from "antd";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { clear, decreaseQuantity, increaseQuantity, remove } from "../../../redux";
+import {
+  clear,
+  decreaseQuantity,
+  increaseQuantity,
+  remove,
+} from "../../../redux";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
@@ -12,6 +17,7 @@ const index = () => {
   const navigate = useNavigate();
   const { buying } = useSelector((state) => state.items);
   const [totalPrice, setTotalPrice] = useState(0);
+  const [loading, setLoading] = useState(false);
 
   async function handleSubmit() {
     if (
@@ -22,6 +28,8 @@ const index = () => {
       return messageApi.error("Formani to'liq to'ldiring!");
     } else if (buying.length === 0) {
       messageApi.error("Tanlangan mahsulotlar yo'q.");
+    } else {
+      setLoading(true);
     }
     try {
       for (let i = 0; i <= buying.length; i++) {
@@ -35,15 +43,20 @@ const index = () => {
           price: buying[i].price,
         });
         if (data?.code === 201) {
+          dispatch(remove(buying[i].id));
           messageApi.success("Buyurtma qabul qilindi!");
         }
       }
-      dispatch(clear())
-      navigate("/");
+      setLoading(false);
     } catch (error) {
-      messageApi.success("Nimadadir xatolik ketdi! Qaytadan uruning.");
+      if (error) {
+        messageApi.error("Nimadadir xatolik ketdi!");
+      }
+      setLoading(false);
       return;
     }
+    setLoading(false);
+    return navigate("/");
   }
 
   function calculateTotalPrice() {
@@ -190,7 +203,7 @@ const index = () => {
             <tr>
               <th className="py-3 text-left">Mahsulot umumiy narxi:</th>
               <td className="text-right">
-                UZS
+                UZS{" "}
                 {Number(
                   buying.reduce((a, b) => a + b.price * b.count, 0)
                 ).toFixed(2)}
@@ -203,7 +216,7 @@ const index = () => {
             <tr>
               <th className="py-3 text-left">QQS narxi (4%):</th>
               <td className="text-right">
-                UZS
+                UZS{" "}
                 {(
                   (4 / 100) *
                   Number(buying.reduce((a, b) => a + b.price * b.count, 0))
@@ -228,6 +241,7 @@ const index = () => {
           className="bg-blue-500 w-full my-5"
           icon={<span className="fa-solid fa-shopping-cart" />}
           onClick={handleSubmit}
+          loading={loading}
         >
           Buyurtma berish
         </Button>

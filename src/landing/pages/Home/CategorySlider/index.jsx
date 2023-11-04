@@ -1,21 +1,19 @@
 import { Button } from "antd";
 import { useRef } from "react";
-import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { Card, CardPlaceholder } from "../../../components";
 
-const index = () => {
+const index = ({ data }) => {
   const productsRef = useRef();
-  const { news_products } = useSelector((state) => state.data);
 
   return (
     <div>
       <div className="flex items-center justify-between">
         <Link
-          to={`/category/new`}
+          to={`/category/${data?.slug}`}
           className="text-2xl sm:text-4xl md:text-5xl text-center font-medium mb-5"
         >
-          Yangi mahsulotlar
+          {data?.name}
         </Link>
         <div className="flex items-center gap-3">
           <Button.Group>
@@ -44,13 +42,10 @@ const index = () => {
         ref={productsRef}
         className="flex gap-x-6 gap-y-3 overflow-x-auto scrollbar-none py-4"
       >
-        {news_products?.length > 0
-          ? news_products?.map?.((product, ind) => (
-              <Card
-                key={ind}
-                data={{ ...product, badge: { text: "Yangi", color: "red" } }}
-              />
-            ))
+        {data?.products?.length > 0
+          ? data?.products
+              ?.slice?.(0, 10)
+              ?.map?.((product, ind) => <Card key={ind} data={product} />)
           : new Array(5)
               .fill(null)
               .map((_, ind) => <CardPlaceholder key={ind} />)}

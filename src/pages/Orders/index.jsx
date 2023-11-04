@@ -266,7 +266,7 @@ const index = () => {
             {data?.map?.((item, ind) => (
               <tr key={ind} className="text-center border-t">
                 <th className="py-3">{ind + 1}</th>
-                <th>{item?.product_name?.slice?.(0, 20)}</th>
+                <th>{item?.product_name}</th>
                 <td>{item?.amount}</td>
                 <td>UZS {item?.price}</td>
                 <td>{item?.name}</td>

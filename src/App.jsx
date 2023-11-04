@@ -19,7 +19,12 @@ import {
   Subcategory as LandingSubcategory,
   BuyProduct as LandingBuyProduct,
 } from "./landing";
-import { setMainBanners, setMostSold, setNewProducts, setStockBanners } from "./redux";
+import {
+  setMainBanners,
+  setMostSold,
+  setNewProducts,
+  setStockBanners,
+} from "./redux";
 import { useDispatch } from "react-redux";
 import axios from "axios";
 import { setCategories } from "./redux/data";
@@ -39,15 +44,15 @@ const App = () => {
   async function getAllDataForLanding() {
     try {
       let main_banners = await axios.get("/main-page-news/get");
+      dispatch(setMainBanners(main_banners?.data?.data));
       let news_banners = await axios.get("/news/get");
+      dispatch(setStockBanners(news_banners?.data?.news?.data));
       let new_products = await axios.get("/get-product-uz-new");
+      dispatch(setNewProducts(new_products?.data?.product?.data));
       let most_sold = await axios.get("/product/get-ten");
+      dispatch(setMostSold(most_sold?.data?.data));
       let { data: cat } = await axios.get("/parent-category/get");
       dispatch(setCategories(cat?.data));
-      dispatch(setMainBanners(main_banners?.data?.data));
-      dispatch(setStockBanners(news_banners?.data?.news?.data));
-      dispatch(setNewProducts(new_products?.data?.product?.data));
-      dispatch(setMostSold(most_sold?.data?.data));
     } catch (error) {
       return;
     }
@@ -63,7 +68,7 @@ const App = () => {
     }
     if (window.location.pathname.startsWith("/admin") === false) {
       getAllDataForLanding();
-    }else {
+    } else {
       getAllDataForLanding();
     }
   }, [window.location.pathname, adminBlock]);
