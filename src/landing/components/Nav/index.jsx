@@ -52,13 +52,16 @@ const index = () => {
         >
           adras
         </Link>
-        <Link to="/" className="max-w-[50px]">
+        <Link to="/" className="max-w-[50px] hidden sm:block">
           <img src="/logo-icon.png" alt="Adras logo" />
+        </Link>
+        <Link to="/" className="max-w-[130px] block sm:hidden">
+          <img src="/logo.png" alt="Adras logo" />
         </Link>
         <div className="flex items-center gap-2">
           <Button
             type="primary"
-            className="bg-blue-500"
+            className="bg-blue-500 w-8"
             icon={<span className="fa-solid fa-search" />}
             onClick={() => searchModal.current.showModal()}
           />

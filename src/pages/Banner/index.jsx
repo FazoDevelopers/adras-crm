@@ -27,8 +27,9 @@ const index = () => {
   async function handleCreate(values) {
     setLoading(true);
     let data = new FormData();
-    data.append("text", values.text);
+    data.append("text", values?.text);
     data.append("image", image);
+    if (!values.text) data.delete("text");
     try {
       let response = await axios.post(
         `/admin/${localStorage.getItem("adras-token")}/main-page-news/store`,
@@ -93,16 +94,7 @@ const index = () => {
       <div>
         <h3 className="text-3xl font-semibold mb-3">Yangi banner qo'shish:</h3>
         <Form name="basic" onFinish={handleCreate} autoComplete="off">
-          <Form.Item
-            label="Nomi"
-            name="text"
-            rules={[
-              {
-                required: true,
-                message: "",
-              },
-            ]}
-          >
+          <Form.Item label="Nomi" name="text">
             <Input className="border rounded border-blue-500 p-2" />
           </Form.Item>
           <Form.Item

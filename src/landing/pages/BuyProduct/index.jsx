@@ -1,4 +1,4 @@
-import { Button, Form, Input, message } from "antd";
+import { Button, Form, Input, notification } from "antd";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -11,7 +11,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 const index = () => {
-  const [messageApi, contextHolder] = message.useMessage();
+  const [messageApi, contextHolder] = notification.useNotification();
   const [form] = Form.useForm();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -25,38 +25,51 @@ const index = () => {
       !form.getFieldsValue().phone ||
       !form.getFieldsValue().address
     ) {
-      return messageApi.error("Formani to'liq to'ldiring!");
+      return messageApi.error({
+        message: "Formani to'liq to'ldiring!",
+      });
     } else if (buying.length === 0) {
-      messageApi.error("Tanlangan mahsulotlar yo'q.");
+      messageApi.error({
+        message: "Tanlangan mahsulotlar yo'q!",
+      });
     } else {
       setLoading(true);
     }
+    let orders = [];
+    buying.forEach((buying) => {
+      orders.push({
+        product_name: buying.name,
+        product_slug: buying.slug,
+        amount: buying.count,
+        price: buying.price * buying.count,
+      });
+    });
+
     try {
-      for (let i = 0; i <= buying.length; i++) {
-        let { data } = await axios.post("/order/store", {
-          name: form.getFieldsValue().name,
-          phone: form.getFieldsValue().phone,
-          location: form.getFieldsValue().address,
-          product_name: buying[i].name,
-          product_slug: buying[i].slug,
-          amount: buying[i].count,
-          price: buying[i].price,
+      let { data } = await axios.post("/order/store", {
+        name: form.getFieldsValue().name,
+        phone: form.getFieldsValue().phone,
+        location: form.getFieldsValue().address,
+        order: JSON.stringify(orders),
+      });
+      if (data?.code === 201) {
+        dispatch(clear());
+        messageApi.success({
+          message: "Qabul qilindi!",
+          description:
+            "Buyurtmangiz qabul qilindi. Tez orada siz bilan aloqaga chiqiladi.",
         });
-        if (data?.code === 201) {
-          dispatch(remove(buying[i].id));
-          messageApi.success("Buyurtma qabul qilindi!");
-        }
       }
       setLoading(false);
+      return navigate("/");
     } catch (error) {
       if (error) {
-        messageApi.error("Nimadadir xatolik ketdi!");
+        messageApi.error({ message: "Nimadadir xatolik ketdi!" });
       }
       setLoading(false);
       return;
     }
     setLoading(false);
-    return navigate("/");
   }
 
   function calculateTotalPrice() {

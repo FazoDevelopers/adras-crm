@@ -16,11 +16,11 @@ const index = () => {
       >
         {main_banners?.map?.((item, ind) => {
           return (
-            <div key={ind} className="h-96 w-full relative">
+            <div key={ind} className="h-full w-full relative">
               <img
                 src={`https://api.abdullajonov.uz/adras-market-api/public/storage/images/${item?.image}`}
                 alt="carousel image"
-                className="w-full h-[99%] rounded-lg aspect-video object-cover object-right sm:object-center"
+                className="w-full h-[99%] rounded-lg"
               />
             </div>
           );

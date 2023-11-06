@@ -254,7 +254,8 @@ const index = () => {
               <th className="py-5">#</th>
               <th>Mahsulot</th>
               <th>Miqdori</th>
-              <th>Narxi</th>
+              <th>Umumiy narx</th>
+              <th>Yetkazib berish</th>
               <th>Mijoz</th>
               <th>Tel. raqam</th>
               <th>Joylashuv</th>
@@ -269,6 +270,7 @@ const index = () => {
                 <th>{item?.product_name}</th>
                 <td>{item?.amount}</td>
                 <td>UZS {item?.price}</td>
+                <td>UZS 10000</td>
                 <td>{item?.name}</td>
                 <td>{item?.phone}</td>
                 <td>{item?.location}</td>

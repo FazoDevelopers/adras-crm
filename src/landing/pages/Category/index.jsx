@@ -1,6 +1,5 @@
 import axios from "axios";
-import { useEffect } from "react";
-import { useState } from "react";
+import { useEffect, useState, useLayoutEffect } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { Card, Footer, Nav, SubCategoryButton } from "../../components";
@@ -10,6 +9,14 @@ const index = () => {
   const { categories, news_products } = useSelector((state) => state.data);
   const [products, setProducts] = useState([]);
   const [curCategory, setCategory] = useState([]);
+
+  useLayoutEffect(() =>
+    window.scrollTo({
+      left: 0,
+      top: 0,
+      behavior: "smooth",
+    })
+  );
 
   async function getProducts() {
     try {
@@ -41,11 +48,11 @@ const index = () => {
     <>
       <Nav />
       {curCategory?.image_2?.length > 0 && (
-        <div className="w-full h-[70vh]">
+        <div className="w-full md:h-[70vh] p-1">
           <img
             src={`https://api.abdullajonov.uz/adras-market-api/public/storage/images/${curCategory?.image_2}`}
             alt="category image"
-            className="w-full h-full object-cover object-center"
+            className="w-full h-full object-cover object-center rounded-lg"
           />
         </div>
       )}

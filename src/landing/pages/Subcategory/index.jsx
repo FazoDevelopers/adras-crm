@@ -1,4 +1,5 @@
 import axios from "axios";
+import { useLayoutEffect } from "react";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
@@ -9,6 +10,14 @@ const index = () => {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [curSubCategory, setSubCategory] = useState([]);
+
+  useLayoutEffect(() =>
+    window.scrollTo({
+      left: 0,
+      top: 0,
+      behavior: "smooth",
+    })
+  );
 
   async function getSubCategories() {
     try {
@@ -21,46 +30,47 @@ const index = () => {
 
   async function getProducts() {
     try {
-      let { data } = await axios.get(`/products/get-by-parent-category/${category}`);
+      let { data } = await axios.get(
+        `/products/get-by-parent-category/${category}`
+      );
       setProducts(data?.products?.data);
     } catch (error) {
       return;
     }
   }
 
-  function findSubcategory(){
-    categories?.map((c)=>{
-      if(c?.slug === category){
+  function findSubcategory() {
+    categories?.map((c) => {
+      if (c?.slug === category) {
         setSubCategory(c);
       }
-    })
+    });
   }
 
   useEffect(() => {
     getProducts();
-    findSubcategory()
-    getSubCategories()
+    getSubCategories();
   }, []);
 
   useEffect(() => {
-    findSubcategory()
+    findSubcategory();
   }, [categories]);
 
   return (
     <>
       <Nav />
-      <div className="w-full h-[60vh]">
+      <div className="w-full md:h-[60vh] p-1">
         <img
           src={`https://api.abdullajonov.uz/adras-market-api/public/storage/images/${curSubCategory?.image_2}`}
           alt="category image"
-          className="w-full max-h-full object-cover object-center"
+          className="w-full max-h-full object-cover object-center rounded-lg"
         />
       </div>
       <div className="md:w-4/5 mx-auto">
         <h2 className="text-3xl font-semibold text-center my-5 md:text-5xl">
           Mahsulotlar
         </h2>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 px-2 md:px-0">
+        <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 px-2 md:px-0">
           {products.map((product, ind) => {
             return <Card data={product} />;
           })}
