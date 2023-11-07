@@ -49,6 +49,7 @@ const index = () => {
           to="/"
           className="hidden sm:block text-4xl font-semibold"
           style={{ color: "rgb(30, 63, 134)" }}
+          translate="no"
         >
           adras
         </Link>

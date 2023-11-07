@@ -1,14 +1,5 @@
 import axios from "axios";
-import {
-  Button,
-  DatePicker,
-  Form,
-  Input,
-  message,
-  Modal,
-  Radio,
-  Select,
-} from "antd";
+import { Button, Form, Input, message, Modal, Radio } from "antd";
 import { useEffect, useState } from "react";
 
 const index = () => {
@@ -53,9 +44,14 @@ const index = () => {
       name: values.name,
       phone: values.phone,
       location: values.location,
-      product_slug: values.product_slug,
-      price: values.price,
-      amount: values.amount,
+      orders: JSON.stringify([
+        {
+          product_slug: values.product.split("~")[0],
+          product_name: values.product.split("~")[1],
+          price: Number(values.product.split("~")[2]) * values.amount,
+          amount: values.amount,
+        },
+      ]),
     };
     try {
       let response = await axios.post(`/order/store`, data);
@@ -63,6 +59,7 @@ const index = () => {
         getData();
         messageApi.success("Buyurtma qo'shildi!");
         setLoading(false);
+        setIsAddModalOpen(false)
       }
     } catch (error) {
       messageApi.error("Nimadadir xatolik ketdi!");
@@ -131,6 +128,7 @@ const index = () => {
           title="Buyurtma qo'shish"
           open={isAddModalOpen}
           onCancel={() => setIsAddModalOpen(false)}
+          destroyOnClose
           footer={[]}
         >
           <Form
@@ -172,7 +170,7 @@ const index = () => {
             </Form.Item>
             <Form.Item
               label="Mahsulot"
-              name={"product_slug"}
+              name={"product"}
               rules={[
                 {
                   required: true,
@@ -182,7 +180,9 @@ const index = () => {
             >
               <Radio.Group>
                 {products?.map?.((item) => (
-                  <Radio value={item?.slug}>
+                  <Radio
+                    value={item?.slug + "~" + item?.name + "~" + item?.price}
+                  >
                     <div>
                       <h4 className="text-lg font-semibold">{item?.name}</h4>
                       <p>UZS {item?.price}</p>
@@ -252,10 +252,7 @@ const index = () => {
           <thead>
             <tr className="border-b border-gray-400">
               <th className="py-5">#</th>
-              <th>Mahsulot</th>
-              <th>Miqdori</th>
-              <th>Umumiy narx</th>
-              <th>Yetkazib berish</th>
+              <th>Buyurtma</th>
               <th>Mijoz</th>
               <th>Tel. raqam</th>
               <th>Joylashuv</th>
@@ -267,10 +264,17 @@ const index = () => {
             {data?.map?.((item, ind) => (
               <tr key={ind} className="text-center border-t">
                 <th className="py-3">{ind + 1}</th>
-                <th>{item?.product_name}</th>
-                <td>{item?.amount}</td>
-                <td>UZS {item?.price}</td>
-                <td>UZS 10000</td>
+                <td>
+                  <Button
+                    type="default"
+                    onClick={() => {
+                      setModalData(JSON.parse(JSON.parse(item?.orders)));
+                      setIsModalOpen(true);
+                    }}
+                  >
+                    Buyurtmani ko'rish
+                  </Button>
+                </td>
                 <td>{item?.name}</td>
                 <td>{item?.phone}</td>
                 <td>{item?.location}</td>
@@ -297,8 +301,45 @@ const index = () => {
         </table>
       </div>
 
+      {/* see */}
       <Modal
-        title="Chegirmani tahrirlash"
+        title="Buyurtmalar"
+        open={isModalOpen}
+        onCancel={() => {
+          setIsModalOpen(false);
+          setModalData({});
+        }}
+        okButtonProps={{ className: "bg-blue-500" }}
+      >
+        <table className="text-left w-full">
+          <thead>
+            <tr>
+              <th className="border p-1">#</th>
+              <th className="border p-1">Mahsulot nomi</th>
+              <th className="border p-1 text-center">Miqdori</th>
+              <th className="border p-1 text-center">Yetkazish narxi</th>
+              <th className="border p-1 text-center">Jami narxi</th>
+            </tr>
+          </thead>
+          <tbody>
+            {modalData?.map?.((item, ind) => (
+              <tr key={ind}>
+                <th className="border p-2">{ind + 1}</th>
+                <td className="border p-1 max-w-[200px]">
+                  {item?.product_name}
+                </td>
+                <td className="border text-center">{item?.amount}</td>
+                <td className="border text-center">UZS 10000</td>
+                <td className="border text-center">UZS {Number(item?.price) + 10000}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </Modal>
+
+      {/* edit */}
+      <Modal
+        title="Buyurtmani tahrirlash"
         open={isEditModalOpen}
         destroyOnClose
         onCancel={() => setIsEditModalOpen(false)}
@@ -322,13 +363,6 @@ const index = () => {
             <Input.TextArea
               defaultValue={modalData?.location}
               className="border rounded border-blue-500 p-2"
-            />
-          </Form.Item>
-          <Form.Item label="Mahsulot miqdori" name="amount">
-            <Input
-              type="number"
-              defaultValue={modalData?.amount}
-              className="w-full border rounded border-blue-500 p-2"
             />
           </Form.Item>
           <Form.Item>
