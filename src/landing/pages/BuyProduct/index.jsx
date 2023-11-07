@@ -50,7 +50,7 @@ const index = () => {
         name: form.getFieldsValue().name,
         phone: form.getFieldsValue().phone,
         location: form.getFieldsValue().address,
-        order: JSON.stringify(orders),
+        orders: JSON.stringify(orders),
       });
       if (data?.code === 201) {
         dispatch(clear());
@@ -59,9 +59,9 @@ const index = () => {
           description:
             "Buyurtmangiz qabul qilindi. Tez orada siz bilan aloqaga chiqiladi.",
         });
+        setLoading(false);
+        setTimeout(() => navigate("/"), 2000);
       }
-      setLoading(false);
-      return navigate("/");
     } catch (error) {
       if (error) {
         messageApi.error({ message: "Nimadadir xatolik ketdi!" });
