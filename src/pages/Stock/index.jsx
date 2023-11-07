@@ -199,6 +199,7 @@ const index = () => {
               <th className="py-5">#</th>
               <th>Nomi</th>
               <th>Rasmi</th>
+              <th>Boshlanish sanasi</th>
               <th>Tugash sanasi</th>
               <th></th>
             </tr>
@@ -215,6 +216,7 @@ const index = () => {
                     className="w-10 mx-auto"
                   />
                 </td>
+                <th>{item?.start_time.slice(5, 16)}</th>
                 <th>{item?.time.slice(5, 16)}</th>
                 <td className="w-52">
                   <div className="flex items-center flex-wrap gap-3">
@@ -310,6 +312,9 @@ const index = () => {
               defaultValue={modalData?.text}
               className="border rounded border-blue-500 p-2"
             />
+          </Form.Item>
+          <Form.Item label="Boshlanish sanasi" name="start_time">
+            <DatePicker className="w-full border rounded border-blue-500 p-2" />
           </Form.Item>
           <Form.Item label="Tugash sanasi" name="time">
             <DatePicker className="w-full border rounded border-blue-500 p-2" />
