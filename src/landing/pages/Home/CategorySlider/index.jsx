@@ -40,13 +40,17 @@ const index = ({ data }) => {
       </div>
       <div
         ref={productsRef}
-        className="flex gap-x-6 gap-y-3 overflow-x-auto scrollbar-none py-4"
+        className={
+          data?.products?.length >= 4
+            ? "flex gap-x-6 gap-y-3 overflow-x-auto scrollbar-none py-4"
+            : "flex lg:grid grid-cols-4 gap-x-6 gap-y-3 overflow-x-auto scrollbar-none"
+        }
       >
         {data?.products?.length > 0
           ? data?.products
               ?.slice?.(0, 10)
               ?.map?.((product, ind) => <Card key={ind} data={product} />)
-          : new Array(5)
+          : new Array(4)
               .fill(null)
               .map((_, ind) => <CardPlaceholder key={ind} />)}
       </div>

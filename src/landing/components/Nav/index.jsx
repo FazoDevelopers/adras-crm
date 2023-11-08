@@ -63,7 +63,7 @@ const index = () => {
           <Button
             type="primary"
             className="bg-blue-500 w-8"
-            icon={<span className="fa-solid fa-search" />}
+            icon={<span className="fa-solid fa-search w-8" />}
             onClick={() => searchModal.current.showModal()}
           />
           <div id="google_translate_element" className="border"></div>

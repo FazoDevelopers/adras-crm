@@ -1,7 +1,6 @@
 import axios from "axios";
-import { Button, Form, Input, Modal } from "antd";
+import { Button, Form, Input } from "antd";
 import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
 
 const index = () => {
   const [data, setData] = useState([]);
@@ -25,12 +24,11 @@ const index = () => {
     try {
       let response = await axios.post(
         `/admin/${localStorage.getItem("adras-token")}/shipping-price/store`,
-        { price: values.price }
+        values
       );
       if (response.status === 200) {
         getData();
         setLoading(false);
-        // toast(`Yetkazib berish narxi qo'shildi.`, { type: "success" });
       }
     } catch (error) {
       setLoading(false);
@@ -139,7 +137,7 @@ const index = () => {
             <div className="flex items-center gap-5">
               <h4 className="text-lg font-medium">Namangan shahri:</h4>
               <p className="font-semibold text-blue-700">
-                UZS {data?.[data?.length - 1]?.price}
+                UZS {data?.[data?.length - 1]?.price_city}
               </p>
             </div>
             <div className="flex items-center gap-5">
@@ -151,7 +149,7 @@ const index = () => {
             <div className="flex items-center gap-5">
               <h4 className="text-lg font-medium">Namangan viloyati:</h4>
               <p className="font-semibold text-blue-700">
-                UZS {data?.[data?.length - 1]?.price}
+                UZS {data?.[data?.length - 1]?.price_region}
               </p>
             </div>
             <div className="flex items-center gap-5">
@@ -163,7 +161,7 @@ const index = () => {
             <div className="flex items-center gap-5">
               <h4 className="text-lg font-medium">O'zbekiston bo'ylab:</h4>
               <p className="font-semibold text-blue-700">
-                UZS {data?.[data?.length - 1]?.price}
+                UZS {data?.[data?.length - 1]?.price_uzb}
               </p>
             </div>
             <div className="flex items-center gap-5">
