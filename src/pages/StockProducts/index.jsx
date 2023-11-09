@@ -112,6 +112,7 @@ const index = () => {
 
   return (
     <div>
+      {contextHolder}
       {/* add */}
       <div>
         <Button

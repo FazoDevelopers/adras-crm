@@ -8,6 +8,7 @@ const index = () => {
   const { id: category } = useParams();
   const { categories, news_products } = useSelector((state) => state.data);
   const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [curCategory, setCategory] = useState([]);
 
   useLayoutEffect(() =>
@@ -26,7 +27,9 @@ const index = () => {
         let { data } = await axios.get(`/products/get-by-category/${category}`);
         setProducts(data?.products?.data);
       }
+      setLoading(false)
     } catch (error) {
+      setLoading(false)
       return;
     }
   }
@@ -44,6 +47,22 @@ const index = () => {
     findCategory();
   }, []);
 
+  if(loading){
+    return (
+      <div className="absolute inset-0 grid place-items-center">
+        <div className="text-center px-2">
+          <img
+            draggable={false}
+            src="../logo.png"
+            alt=""
+            className="animate-pulse select-none"
+          />
+          <h1>Yuklanmoqda...</h1>
+        </div>
+      </div>
+    );
+  }
+  
   return (
     <>
       <Nav />
