@@ -6,6 +6,7 @@ const index = () => {
   const [messageApi, contextHolder] = message.useMessage();
   const [data, setData] = useState([]);
   const [image, setImage] = useState();
+  const [dimensions, setDimensions] = useState({ w: 0, h: 0 });
   const [loading, setLoading] = useState(false);
   const [modalData, setModalData] = useState();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -23,6 +24,22 @@ const index = () => {
   useEffect(() => {
     getData();
   }, []);
+
+  const handleImageUpload = (event) => {
+    const uploadedImage = event.target.files[0];
+    const image = new Image();
+    image.src = URL.createObjectURL(uploadedImage);
+
+    // Wait for the image to load before accessing its dimensions
+    image.onload = () => {
+      const width = image.naturalWidth;
+      const height = image.naturalHeight;
+      setDimensions({
+        w: width,
+        h: height,
+      });
+    };
+  };
 
   async function handleCreate(values) {
     setLoading(true);
@@ -111,8 +128,24 @@ const index = () => {
               type="file"
               name="image"
               className="file:bg-transparent file:border-none w-full border rounded border-blue-500 p-2"
-              onChange={(e) => setImage(e.target.files[0])}
+              onChange={(e) => {
+                setImage(e.target.files[0]);
+                handleImageUpload(e);
+              }}
             />
+            <p className="opacity-80 text-[12px]">
+              Banner rasmining bo'yi va eni o'rtasidagi minumum farq{" "}
+              <span className="font-bold">500px</span>
+            </p>
+            <p
+              className={
+                dimensions.w - dimensions.h > 500
+                  ? "text-green-500"
+                  : "text-red-800"
+              }
+            >
+              Tanlangan rasm eni {dimensions.w}px, bo'yi {dimensions.h}px
+            </p>
           </Form.Item>
           <Form.Item>
             <Button
