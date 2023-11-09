@@ -18,12 +18,15 @@ const index = () => {
 
   async function getData() {
     try {
-      let categories = await axios.get("/parent-category/get");
       let subcategories = await axios.get("/child-category/get");
       setData((prev) => ({
         ...prev,
-        categories: categories?.data?.data,
         subcategories: subcategories?.data?.data,
+      }));
+      let categories = await axios.get("/parent-category/get");
+      setData((prev) => ({
+        ...prev,
+        categories: categories?.data?.data,
       }));
     } catch (error) {
       return;
