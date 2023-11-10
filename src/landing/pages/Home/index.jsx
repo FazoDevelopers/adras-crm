@@ -14,19 +14,10 @@ import Newsletter from "./Newsletter";
 import Top from "./Top";
 import CategorySlider from "./CategorySlider";
 import { useSelector } from "react-redux";
-import { useLayoutEffect } from "react";
 
 const index = () => {
   const { main_banners, stock_banners, categories } = useSelector(
     (state) => state.data
-  );
-
-  useLayoutEffect(() =>
-    window.scrollTo({
-      left: 0,
-      top: 0,
-      behavior: "smooth",
-    })
   );
 
   return (
