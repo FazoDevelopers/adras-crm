@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Button, Form, Input, message, Modal, Radio } from "antd";
+import { Button, Form, Input, message, Modal, Radio, Tooltip } from "antd";
 import { useEffect, useState } from "react";
 
 const index = () => {
@@ -38,20 +38,57 @@ const index = () => {
     }
   }
 
+  async function downloadInvoice(values) {
+    let data = {
+      name: values.name,
+      location: values.location,
+      phone: values.phone,
+      delivery: "10000",
+      order: values.order,
+    };
+
+    try {
+      let response = await axios.post(
+        `/${localStorage.getItem("adras-token")}/get-pdf`,
+        data
+      );
+      if (response.status === 200) {
+        messageApi.success("Buyurtma cheki yuklandi!");
+        setTimeout(() => {
+          // window.open(
+          //   "https://api.abdullajonov.uz/adras-market-api/public/storage/orders.pdf"
+          // );
+          const objectUrl =
+            "https://api.abdullajonov.uz/adras-market-api/public/storage/orders.pdf";
+          const anchor = document.createElement("a");
+          anchor.href = objectUrl;
+          anchor.target = "blank";
+          document.body.appendChild(anchor);
+          anchor.click();
+          document.body.removeChild(anchor);
+        }, 100);
+      }
+    } catch (error) {
+      messageApi.error("Nimadadir xatolik ketdi!");
+    }
+  }
+
   async function handleCreate(values) {
     setLoading(true);
     let data = {
       name: values.name,
       phone: values.phone,
       location: values.location,
-      orders: JSON.stringify([
-        {
-          product_slug: values.product.split("~")[0],
-          product_name: values.product.split("~")[1],
-          price: Number(values.product.split("~")[2]) * values.amount,
-          amount: values.amount,
-        },
-      ]),
+      orders: JSON.stringify(
+        JSON.stringify([
+          {
+            product_slug: values.product.split("~")[0],
+            product_name: values.product.split("~")[1],
+            price: Number(values.product.split("~")[2]) * values.amount,
+            amount: values.amount,
+          },
+        ])
+      ),
     };
     try {
       let response = await axios.post(`/order/store`, data);
@@ -59,7 +96,7 @@ const index = () => {
         getData();
         messageApi.success("Buyurtma qo'shildi!");
         setLoading(false);
-        setIsAddModalOpen(false)
+        setIsAddModalOpen(false);
       }
     } catch (error) {
       messageApi.error("Nimadadir xatolik ketdi!");
@@ -268,7 +305,7 @@ const index = () => {
                   <Button
                     type="default"
                     onClick={() => {
-                      setModalData(JSON.parse(JSON.parse(item?.orders)));
+                      setModalData(JSON.parse(item?.orders));
                       setIsModalOpen(true);
                     }}
                   >
@@ -276,11 +313,26 @@ const index = () => {
                   </Button>
                 </td>
                 <td>{item?.name}</td>
-                <td>{item?.phone}</td>
+                <td>+998 {item?.phone}</td>
                 <td>{item?.location}</td>
                 <td>{item?.created_at?.slice(0, 10)}</td>
                 <td className="w-52">
                   <div className="flex items-center flex-wrap gap-3">
+                    <Tooltip title="Chekni yuklab olish" trigger={"hover"}>
+                      <Button
+                        onClick={() =>
+                          downloadInvoice({
+                            name: item?.name,
+                            phone: item?.phone,
+                            location: item?.location,
+                            order: JSON.parse(item?.orders),
+                          })
+                        }
+                        icon={
+                          <span className="fa-solid fa-file-invoice text-green-500" />
+                        }
+                      />
+                    </Tooltip>
                     <Button
                       onClick={() => {
                         setModalData(item);
@@ -317,7 +369,6 @@ const index = () => {
               <th className="border p-1">#</th>
               <th className="border p-1">Mahsulot nomi</th>
               <th className="border p-1 text-center">Miqdori</th>
-              <th className="border p-1 text-center">Yetkazish narxi</th>
               <th className="border p-1 text-center">Jami narxi</th>
             </tr>
           </thead>
@@ -329,8 +380,9 @@ const index = () => {
                   {item?.product_name}
                 </td>
                 <td className="border text-center">{item?.amount}</td>
-                <td className="border text-center">UZS 10000</td>
-                <td className="border text-center">UZS {Number(item?.price) + 10000}</td>
+                <td className="border text-center">
+                  UZS {Number(item?.price)}
+                </td>
               </tr>
             ))}
           </tbody>

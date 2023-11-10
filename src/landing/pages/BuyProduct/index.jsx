@@ -50,7 +50,7 @@ const index = () => {
         name: form.getFieldsValue().name,
         phone: form.getFieldsValue().phone,
         location: form.getFieldsValue().address,
-        orders: JSON.stringify(orders),
+        orders: JSON.stringify(JSON.stringify(orders)),
       });
       if (data?.code === 201) {
         dispatch(clear());
