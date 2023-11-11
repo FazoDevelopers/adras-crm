@@ -15,6 +15,7 @@ const index = () => {
   const [curCategory, setCategory] = useState([]);
 
   async function getProducts() {
+    setNextPage(null)
     try {
       if (category === "new") {
         setProducts(news_products);
