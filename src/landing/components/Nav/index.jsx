@@ -69,7 +69,7 @@ const index = () => {
           <div id="google_translate_element" className="border"></div>
         </div>
       </div>
-      <dialog ref={searchModal} className="z-10 w-screen p-3 rounded-lg">
+      <dialog ref={searchModal} className="z-10 w-screen h-screen p-3 rounded-lg">
         <Form onFinish={handleSearch}>
           <div className="w-full flex items-center justify-between">
             <h2>Mahsulorlarni izlash:</h2>
