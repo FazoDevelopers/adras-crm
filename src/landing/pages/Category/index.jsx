@@ -73,7 +73,7 @@ const index = () => {
     <>
       <Nav />
       {curCategory?.image_2?.length > 0 && (
-        <div className="w-full md:h-[70vh] p-1">
+        <div className="w-full md:h-full p-1">
           <img
             src={`https://api.abdullajonov.uz/adras-market-api/public/storage/images/${curCategory?.image_2}`}
             alt="category image"
