@@ -7,7 +7,7 @@ import {
   increaseQuantity,
   remove,
 } from "../../../redux";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import axios from "axios";
 
 const index = () => {
@@ -18,6 +18,14 @@ const index = () => {
   const { buying } = useSelector((state) => state.items);
   const [totalPrice, setTotalPrice] = useState(0);
   const [loading, setLoading] = useState(false);
+
+  useLayoutEffect(() =>
+    window.scrollTo({
+      left: 0,
+      top: 0,
+      behavior: "smooth",
+    })
+  );
 
   async function handleSubmit() {
     if (

@@ -38,7 +38,7 @@ const index = () => {
               {categories.map((i, ind) => (
                 <NavLink
                   key={ind}
-                  link={`category/${i?.slug}`}
+                  link={`/category/${i?.slug}`}
                   label={i?.name}
                 />
               ))}

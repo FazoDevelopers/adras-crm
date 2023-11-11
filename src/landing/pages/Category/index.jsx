@@ -1,23 +1,18 @@
+import { Button } from "antd";
 import axios from "axios";
-import { useEffect, useState, useLayoutEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { Card, Footer, Nav, SubCategoryButton } from "../../components";
 
 const index = () => {
   const { id: category } = useParams();
+  const { pathname } = useLocation();
   const { categories, news_products } = useSelector((state) => state.data);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [next_page, setNextPage] = useState("");
   const [curCategory, setCategory] = useState([]);
-
-  useLayoutEffect(() =>
-    window.scrollTo({
-      left: 0,
-      top: 0,
-      behavior: "smooth",
-    })
-  );
 
   async function getProducts() {
     try {
@@ -26,10 +21,21 @@ const index = () => {
       } else {
         let { data } = await axios.get(`/products/get-by-category/${category}`);
         setProducts(data?.products?.data);
+        setNextPage(data?.products?.next_page_url);
       }
-      setLoading(false)
+      setLoading(false);
     } catch (error) {
-      setLoading(false)
+      setLoading(false);
+      return;
+    }
+  }
+
+  async function getMore() {
+    try {
+      let { data } = await axios.get(next_page);
+      setProducts((prev) => [...prev, ...data?.products?.data]);
+      setNextPage(data?.products?.next_page_url);
+    } catch (error) {
       return;
     }
   }
@@ -45,9 +51,9 @@ const index = () => {
   useEffect(() => {
     getProducts();
     findCategory();
-  }, []);
+  }, [pathname]);
 
-  if(loading){
+  if (loading) {
     return (
       <div className="absolute inset-0 grid place-items-center">
         <div className="text-center px-2">
@@ -62,7 +68,7 @@ const index = () => {
       </div>
     );
   }
-  
+
   return (
     <>
       <Nav />
@@ -95,6 +101,14 @@ const index = () => {
             return <Card data={product} />;
           })}
         </div>
+        <Button
+          hidden={next_page == null}
+          type="default"
+          className="w-full mt-20 h-10"
+          onClick={getMore}
+        >
+          Ko'proq ko'rish
+        </Button>
       </div>
       <Footer />
     </>

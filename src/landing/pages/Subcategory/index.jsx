@@ -1,7 +1,6 @@
+import { Button } from "antd";
 import axios from "axios";
-import { useLayoutEffect } from "react";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { Card, Footer, Nav } from "../../components";
 
@@ -10,15 +9,8 @@ const index = () => {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [next_page, setNextPage] = useState("");
   const [curSubCategory, setSubCategory] = useState([]);
-
-  useLayoutEffect(() =>
-    window.scrollTo({
-      left: 0,
-      top: 0,
-      behavior: "smooth",
-    })
-  );
 
   async function getSubCategories() {
     try {
@@ -35,9 +27,20 @@ const index = () => {
         `/products/get-by-parent-category/${category}`
       );
       setProducts(data?.products?.data);
+        setNextPage(data?.products?.next_page_url);
       setLoading(false);
     } catch (error) {
       setLoading(false);
+      return;
+    }
+  }
+  
+  async function getMore() {
+    try {
+      let { data } = await axios.get(next_page);
+      setProducts((prev) => [...prev, ...data?.products?.data]);
+      setNextPage(data?.products?.next_page_url);
+    } catch (error) {
       return;
     }
   }
@@ -94,6 +97,14 @@ const index = () => {
             return <Card data={product} />;
           })}
         </div>
+        <Button
+          hidden={next_page == null}
+          type="default"
+          className="w-full mt-20 h-10"
+          onClick={getMore}
+        >
+          Ko'proq ko'rish
+        </Button>
       </div>
       <Footer />
     </>

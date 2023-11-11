@@ -59,6 +59,7 @@ const index = () => {
         getData();
         setImage(null);
         setLoading(false);
+        setIsAddModalOpen(false);
         messageApi.success("Aksiya banneri qo'shildi!");
       }
     } catch (error) {
@@ -162,19 +163,23 @@ const index = () => {
                   handleImageUpload(e);
                 }}
               />
-              <p className="opacity-80 text-[12px]">
-                Banner rasmining bo'yi va eni o'rtasidagi minumum farq{" "}
-                <span className="font-bold">500px</span>
-              </p>
-              <p
-                className={
-                  dimensions.w - dimensions.h > 500
-                    ? "text-green-500"
-                    : "text-red-800"
-                }
-              >
-                Tanlangan rasm eni {dimensions.w}px, bo'yi {dimensions.h}px
-              </p>
+            </Form.Item>
+            <Form.Item>
+              <div>
+                <p className="opacity-80 text-[12px]">
+                  Banner rasmining bo'yi va eni o'rtasidagi minumum farq{" "}
+                  <span className="font-bold">500px</span>
+                </p>
+                <p
+                  className={
+                    dimensions.w - dimensions.h > 500
+                      ? "text-green-500"
+                      : "text-red-800"
+                  }
+                >
+                  Tanlangan rasm eni {dimensions.w}px, bo'yi {dimensions.h}px
+                </p>
+              </div>
             </Form.Item>
             <Form.Item
               label="Tafsilot"
