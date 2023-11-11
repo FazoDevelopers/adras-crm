@@ -10,28 +10,28 @@ export const adminOrderSlice = createSlice({
       state.order.push(action.payload);
     },
     removeOrder: (state, action) => {
-      for (let i = 0; i < state.buying.length; i++) {
-        if (state.buying[i].id === action.payload) {
-          state.buying.splice(i, 1);
+      for (let i = 0; i < state.order.length; i++) {
+        if (state.order[i].id === action.payload) {
+          state.order.splice(i, 1);
         }
       }
     },
     increaseOrderQuantity: (state, action) => {
-      for (let i = 0; i < state.buying.length; i++) {
-        if (state.buying[i].id === action.payload) {
-          state.buying[i].count++;
+      for (let i = 0; i < state.order.length; i++) {
+        if (state.order[i].id === action.payload) {
+          state.order[i].count++;
         }
       }
     },
     decreaseOrderQuantity: (state, action) => {
-      for (let i = 0; i < state.buying.length; i++) {
-        if (state.buying[i].id === action.payload) {
-          if (state.buying[i].count > 1) state.buying[i].count--;
+      for (let i = 0; i < state.order.length; i++) {
+        if (state.order[i].id === action.payload) {
+          if (state.order[i].count > 1) state.order[i].count--;
         }
       }
     },
     clearOrder: (state) => {
-      state.buying = [];
+      state.order = [];
     },
   },
 });

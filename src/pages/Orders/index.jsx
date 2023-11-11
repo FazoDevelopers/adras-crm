@@ -1,11 +1,22 @@
 import axios from "axios";
-import { Button, Form, Input, message, Modal, Radio, Tooltip } from "antd";
+import { Button, Form, Input, message, Modal, Checkbox, Tooltip } from "antd";
 import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addOrder,
+  clearOrder,
+  decreaseOrderQuantity,
+  increaseOrderQuantity,
+  removeOrder,
+} from "../../redux";
 
 const index = () => {
   const [messageApi, contextHolder] = message.useMessage();
+  const { order } = useSelector((state) => state.adminOrder);
+  const dispatch = useDispatch();
   const [data, setData] = useState([]);
   const [products, setProducts] = useState([]);
+  // const [selectedProducts, setSelectedProducts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [modalData, setModalData] = useState();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -75,20 +86,20 @@ const index = () => {
 
   async function handleCreate(values) {
     setLoading(true);
+    let orders = [];
+    order.forEach((buying) => {
+      orders.push({
+        product_name: buying.name,
+        product_slug: buying.slug,
+        amount: buying.count,
+        price: buying.price * buying.count,
+      });
+    });
     let data = {
       name: values.name,
       phone: values.phone,
       location: values.location,
-      orders: JSON.stringify(
-        JSON.stringify([
-          {
-            product_slug: values.product.split("~")[0],
-            product_name: values.product.split("~")[1],
-            price: Number(values.product.split("~")[2]) * values.amount,
-            amount: values.amount,
-          },
-        ])
-      ),
+      orders: JSON.stringify(JSON.stringify(orders)),
     };
     try {
       let response = await axios.post(`/order/store`, data);
@@ -97,6 +108,8 @@ const index = () => {
         messageApi.success("Buyurtma qo'shildi!");
         setLoading(false);
         setIsAddModalOpen(false);
+        dispatch(clearOrder());
+        setProducts([]);
       }
     } catch (error) {
       messageApi.error("Nimadadir xatolik ketdi!");
@@ -167,6 +180,7 @@ const index = () => {
           onCancel={() => setIsAddModalOpen(false)}
           destroyOnClose
           footer={[]}
+          className="w-11/12"
         >
           <Form
             name="search"
@@ -206,45 +220,6 @@ const index = () => {
               <Input className="border rounded border-blue-500 p-2" />
             </Form.Item>
             <Form.Item
-              label="Mahsulot"
-              name={"product"}
-              rules={[
-                {
-                  required: true,
-                  message: " ",
-                },
-              ]}
-            >
-              <Radio.Group>
-                {products?.map?.((item) => (
-                  <Radio
-                    value={item?.slug + "~" + item?.name + "~" + item?.price}
-                  >
-                    <div>
-                      <h4 className="text-lg font-semibold">{item?.name}</h4>
-                      <p>UZS {item?.price}</p>
-                    </div>
-                  </Radio>
-                ))}
-              </Radio.Group>
-            </Form.Item>
-            <Form.Item
-              label="Miqdori"
-              name="amount"
-              rules={[
-                {
-                  required: true,
-                  message: "",
-                },
-              ]}
-            >
-              <Input
-                type="number"
-                min={1}
-                className="w-full border rounded border-blue-500 p-2"
-              />
-            </Form.Item>
-            <Form.Item
               label="Manzil"
               name="location"
               rules={[
@@ -271,6 +246,98 @@ const index = () => {
                 className="border rounded border-blue-500 p-2"
               />
             </Form.Item>
+            <Form.Item
+              label="Mahsulotlar"
+              name={"product"}
+              rules={[
+                {
+                  required: true,
+                  message: " ",
+                },
+              ]}
+            >
+              <Checkbox.Group>
+                {products?.map?.((item) => (
+                  <Checkbox
+                    value={item?.slug + "~" + item?.name + "~" + item?.price}
+                    onChange={() => {
+                      dispatch(addOrder({ ...item, count: 1 }));
+                    }}
+                  >
+                    <div>
+                      <h4 className="text-lg font-semibold">{item?.name}</h4>
+                      <p>UZS {item?.price}</p>
+                    </div>
+                  </Checkbox>
+                ))}
+              </Checkbox.Group>
+            </Form.Item>
+            <Form.Item>
+              <table className="border border-collapse w-full">
+                <thead>
+                  <tr>
+                    <th className="border border-collapse p-1"></th>
+                    <th className="border border-collapse p-1 w-1/2">
+                      Mahsulot
+                    </th>
+                    <th className="border border-collapse p-1">Miqdori</th>
+                    <th className="border border-collapse p-1">Narxi</th>
+                    <th className="border border-collapse p-1"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {order.length > 0 &&
+                    order?.map?.((item, ind) => {
+                      return (
+                        <tr key={ind}>
+                          <th className="border border-collapse p-1">
+                            {ind + 1}
+                          </th>
+                          <td className="border border-collapse p-1 line-clamp-3">
+                            {item?.name}
+                          </td>
+                          <td className="border border-collapse p-1">
+                            <Button.Group>
+                              <Button
+                                size="small"
+                                onClick={() =>
+                                  dispatch(decreaseOrderQuantity(item.id))
+                                }
+                              >
+                                -
+                              </Button>
+                              <Input
+                                size="small"
+                                min={1}
+                                value={item?.count}
+                                className="rounded-none w-10 text-center"
+                              />
+                              <Button
+                                size="small"
+                                onClick={() =>
+                                  dispatch(increaseOrderQuantity(item.id))
+                                }
+                              >
+                                +
+                              </Button>
+                            </Button.Group>
+                          </td>
+                          <td className="border border-collapse p-2">
+                            UZS {item?.price * item?.count}
+                          </td>
+                          <td className="border border-collapse p-1">
+                            <Button
+                              danger
+                              icon={<span className="fa-solid fa-trash" />}
+                              onClick={() => dispatch(removeOrder(item.id))}
+                            />
+                          </td>
+                        </tr>
+                      );
+                    })}
+                </tbody>
+              </table>
+            </Form.Item>
             <Form.Item>
               <Button
                 loading={loading}
@@ -284,24 +351,26 @@ const index = () => {
           </Form>
         </Modal>
       </div>
-      <div>
-        <table className="w-full">
+
+      {/* table */}
+      <div className="mt-3">
+        <table className="w-full border border-collapse">
           <thead>
             <tr className="border-b border-gray-400">
               <th className="py-5">#</th>
-              <th>Buyurtma</th>
-              <th>Mijoz</th>
-              <th>Tel. raqam</th>
-              <th>Joylashuv</th>
-              <th>Sana</th>
-              <th></th>
+              <th className="border border-collapse p-1">Buyurtma</th>
+              <th className="border border-collapse p-1">Mijoz</th>
+              <th className="border border-collapse p-1">Tel. raqam</th>
+              <th className="border border-collapse p-1">Joylashuv</th>
+              <th className="border border-collapse p-1">Sana</th>
+              <th className="border border-collapse p-1"></th>
             </tr>
           </thead>
           <tbody>
             {data?.map?.((item, ind) => (
               <tr key={ind} className="text-center border-t">
                 <th className="py-3">{ind + 1}</th>
-                <td>
+                <td className="border border-collapse p-1">
                   <Button
                     type="default"
                     onClick={() => {
@@ -312,11 +381,15 @@ const index = () => {
                     Buyurtmani ko'rish
                   </Button>
                 </td>
-                <td>{item?.name}</td>
-                <td>+998 {item?.phone}</td>
-                <td>{item?.location}</td>
-                <td>{item?.created_at?.slice(0, 10)}</td>
-                <td className="w-52">
+                <td className="border border-collapse p-1">{item?.name}</td>
+                <td className="border border-collapse p-1">
+                  +998 {item?.phone}
+                </td>
+                <td className="border border-collapse p-1">{item?.location}</td>
+                <td className="border border-collapse p-1">
+                  {item?.created_at?.slice(0, 10)}
+                </td>
+                <td className="w-52 border border-collapse text-center px-3">
                   <div className="flex items-center flex-wrap gap-3">
                     <Tooltip title="Chekni yuklab olish" trigger={"hover"}>
                       <Button
