@@ -12,7 +12,8 @@ const index = () => {
   const googleTranslateElementInit = () => {
     new window.google.translate.TranslateElement(
       {
-        pageLanguage: "eng",
+        pageLanguage: "uz",
+        includedLanguages: "uz,en,ru",
       },
       "google_translate_element"
     );

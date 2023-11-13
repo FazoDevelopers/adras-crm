@@ -391,7 +391,7 @@ const index = () => {
                 </td>
                 <td className="w-52 border border-collapse text-center px-3">
                   <div className="flex items-center flex-wrap gap-3">
-                    <Tooltip title="Chekni yuklab olish" trigger={"hover"}>
+                    {/* <Tooltip title="Chekni yuklab olish" trigger={"hover"}>
                       <Button
                         onClick={() =>
                           downloadInvoice({
@@ -405,7 +405,7 @@ const index = () => {
                           <span className="fa-solid fa-file-invoice text-green-500" />
                         }
                       />
-                    </Tooltip>
+                    </Tooltip> */}
                     <Button
                       onClick={() => {
                         setModalData(item);
