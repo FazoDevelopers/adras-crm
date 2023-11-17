@@ -1,5 +1,14 @@
 import axios from "axios";
-import { Button, Form, Input, message, Modal, Checkbox, Tooltip } from "antd";
+import {
+  Button,
+  Form,
+  Input,
+  message,
+  Modal,
+  Checkbox,
+  Tooltip,
+  Radio,
+} from "antd";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -15,6 +24,7 @@ const index = () => {
   const { order } = useSelector((state) => state.adminOrder);
   const dispatch = useDispatch();
   const [data, setData] = useState([]);
+  const [delivery, setDelivery] = useState([]);
   const [products, setProducts] = useState([]);
   // const [selectedProducts, setSelectedProducts] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -29,6 +39,8 @@ const index = () => {
         `/admin/${localStorage.getItem("adras-token")}/order/get`
       );
       setData(order?.data?.data);
+      let delivery = await axios.get("/get-shipping-price");
+      setDelivery(delivery?.data?.data);
     } catch (error) {
       return;
     }
@@ -54,7 +66,7 @@ const index = () => {
       name: values.name,
       location: values.location,
       phone: values.phone,
-      delivery: "10000",
+      delivery: values.delivery,
       order: values.order,
     };
 
@@ -65,19 +77,16 @@ const index = () => {
       );
       if (response.status === 200) {
         messageApi.success("Buyurtma cheki yuklandi!");
-        setTimeout(() => {
-          // window.open(
-          //   "https://api.abdullajonov.uz/adras-market-api/public/storage/orders.pdf"
-          // );
-          const objectUrl =
-            "https://api.abdullajonov.uz/adras-market-api/public/storage/orders.pdf";
-          const anchor = document.createElement("a");
-          anchor.href = objectUrl;
-          anchor.target = "blank";
-          document.body.appendChild(anchor);
-          anchor.click();
-          document.body.removeChild(anchor);
-        }, 100);
+        try {
+          const link = document.createElement("a");
+          link.href = `https://api.abdullajonov.uz/adras-market-api/public/storage/${response.data.psd_name}.pdf`;
+          link.target = "blank";
+          document.body.appendChild(link);
+          link.click();
+          link.parentNode.removeChild(link);
+        } catch (error) {
+          console.error("Error downloading the file:", error);
+        }
       }
     } catch (error) {
       messageApi.error("Nimadadir xatolik ketdi!");
@@ -98,6 +107,7 @@ const index = () => {
     let data = {
       name: values.name,
       phone: values.phone,
+      delivery: values.delivery,
       location: values.location,
       orders: JSON.stringify(JSON.stringify(orders)),
     };
@@ -230,6 +240,26 @@ const index = () => {
               ]}
             >
               <Input.TextArea className="border rounded border-blue-500 p-2" />
+            </Form.Item>
+            <Form.Item
+              label="Yetkazish"
+              name="delivery"
+              rules={[
+                {
+                  required: true,
+                  message: "",
+                },
+              ]}
+            >
+              <Radio.Group>
+                {delivery?.map?.((i, ind) => (
+                  <Radio key={ind} value={i?.price}>
+                    {" "}
+                    <div>{i?.type}</div>
+                    <div>UZS {i?.price}</div>
+                  </Radio>
+                ))}
+              </Radio.Group>
             </Form.Item>
             <Form.Item
               label="Telefon"
@@ -391,13 +421,14 @@ const index = () => {
                 </td>
                 <td className="w-52 border border-collapse text-center px-3">
                   <div className="flex items-center flex-wrap gap-3">
-                    {/* <Tooltip title="Chekni yuklab olish" trigger={"hover"}>
+                    <Tooltip title="Chekni yuklab olish" trigger={"hover"}>
                       <Button
                         onClick={() =>
                           downloadInvoice({
                             name: item?.name,
                             phone: item?.phone,
                             location: item?.location,
+                            delivery: item?.delivery,
                             order: JSON.parse(item?.orders),
                           })
                         }
@@ -405,7 +436,7 @@ const index = () => {
                           <span className="fa-solid fa-file-invoice text-green-500" />
                         }
                       />
-                    </Tooltip> */}
+                    </Tooltip>
                     <Button
                       onClick={() => {
                         setModalData(item);

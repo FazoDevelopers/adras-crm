@@ -1,4 +1,4 @@
-import { Button, Form, Input, notification } from "antd";
+import { Button, Form, Input, notification, Radio } from "antd";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -18,6 +18,8 @@ const index = () => {
   const { buying } = useSelector((state) => state.items);
   const [totalPrice, setTotalPrice] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [delivery, setDelivery] = useState([]);
+  const [deliveryPrice, setDeliveryPrice] = useState(0);
 
   useLayoutEffect(() =>
     window.scrollTo({
@@ -27,10 +29,24 @@ const index = () => {
     })
   );
 
+  async function getData() {
+    try {
+      let delivery = await axios.get("/get-shipping-price");
+      setDelivery(delivery?.data?.data);
+    } catch (error) {
+      return;
+    }
+  }
+
+  useEffect(() => {
+    getData();
+  }, []);
+
   async function handleSubmit() {
     if (
       !form.getFieldsValue().name ||
       !form.getFieldsValue().phone ||
+      !form.getFieldsValue().delivery ||
       !form.getFieldsValue().address
     ) {
       return messageApi.error({
@@ -58,6 +74,7 @@ const index = () => {
         name: form.getFieldsValue().name,
         phone: form.getFieldsValue().phone,
         location: form.getFieldsValue().address,
+        delivery: form.getFieldsValue().delivery,
         orders: JSON.stringify(JSON.stringify(orders)),
       });
       if (data?.code === 201) {
@@ -86,14 +103,13 @@ const index = () => {
     );
     let qqsPrice =
       (4 / 100) * Number(buying.reduce((a, b) => a + b.price * b.count, 0));
-    let shipmentPrice = 10000;
 
-    setTotalPrice(Number(productsPrice + qqsPrice + shipmentPrice).toFixed(2));
+    setTotalPrice(Number(productsPrice + qqsPrice + deliveryPrice).toFixed(2));
   }
 
   useEffect(() => {
     calculateTotalPrice();
-  }, [buying]);
+  }, [buying, deliveryPrice]);
 
   return (
     <div className="py-10 w-11/12 md:w-3/4 mx-auto">
@@ -206,6 +222,29 @@ const index = () => {
           >
             <Input.TextArea required rows={3} />
           </Form.Item>
+
+          <Form.Item
+            label="Yetkazish"
+            name="delivery"
+            rules={[
+              {
+                required: true,
+                message: "",
+              },
+            ]}
+          >
+            <Radio.Group
+              onChange={(e) => setDeliveryPrice(Number(e.target.value))}
+            >
+              {delivery?.map?.((i, ind) => (
+                <Radio key={ind} value={i?.price}>
+                  {" "}
+                  <div>{i?.type}</div>
+                  <div>UZS {i?.price}</div>
+                </Radio>
+              ))}
+            </Radio.Group>
+          </Form.Item>
         </Form>
       </div>
 
@@ -232,7 +271,7 @@ const index = () => {
             </tr>
             <tr>
               <th className="py-3 text-left">Yetkazib berish narxi:</th>
-              <td className="text-right">UZS 10000.00</td>
+              <td className="text-right">UZS {deliveryPrice}.00</td>
             </tr>
             <tr>
               <th className="py-3 text-left">QQS narxi (4%):</th>

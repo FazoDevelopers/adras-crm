@@ -1,10 +1,12 @@
 import axios from "axios";
-import { Button, Form, Input } from "antd";
+import { Button, Form, Input, Modal, Select } from "antd";
 import { useEffect, useState } from "react";
 
 const index = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [modalData, setModalData] = useState({});
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   async function getData() {
     try {
@@ -35,38 +37,38 @@ const index = () => {
     }
   }
 
-  // async function handleEdit(values) {
-  //   setLoading(true);
-  //   try {
-  //     let response = await axios.post(
-  //       `/admin/${localStorage.getItem("adras-token")}/main-page-news/${
-  //         modalData?.id
-  //       }/update`,
-  //       data
-  //     );
-  //     if (response.status === 200) {
-  //       getData();
-  //       setLoading(false);
-  //     }
-  //   } catch (error) {
-  //     setLoading(false);
-  //   }
-  // }
+  async function handleEdit(values) {
+    setLoading(true);
+    try {
+      let response = await axios.post(
+        `/admin/${localStorage.getItem("adras-token")}/shipping-price/${
+          modalData?.id
+        }/update`,
+        values
+      );
+      if (response.status === 200) {
+        getData();
+        setModalData({});
+        setLoading(false);
+        setIsEditModalOpen(false);
+      }
+    } catch (error) {
+      setLoading(false);
+    }
+  }
 
-  // async function handleDelete(id) {
-  //   try {
-  //     let response = await axios.delete(
-  //       `/admin/${localStorage.getItem(
-  //         "adras-token"
-  //       )}/main-page-news/${id}/delete`
-  //     );
-  //     if (response.status === 200) {
-  //       getData();
-  //     }
-  //   } catch (error) {
-  //     return;
-  //   }
-  // }
+  async function handleDelete(id) {
+    try {
+      let response = await axios.delete(
+        `/admin/${localStorage.getItem("adras-token")}/shipping-price/${id}`
+      );
+      if (response.status === 200) {
+        getData();
+      }
+    } catch (error) {
+      return;
+    }
+  }
 
   return (
     <div>
@@ -75,23 +77,24 @@ const index = () => {
         <Form name="basic" onFinish={handleCreate} autoComplete="off">
           <Form.Item
             label="Namangan shahri"
-            name="price_city"
+            name="price"
             rules={[
               {
                 required: true,
                 message: "",
+                min: 0,
               },
             ]}
           >
             <Input
-              defaultValue={data?.[data?.length - 1]?.price_city}
+              min={0}
               type="number"
               className="border rounded border-blue-500 p-2"
             />
           </Form.Item>
           <Form.Item
-            label="Namangan viloyati"
-            name="price_region"
+            label="Joylashuvi"
+            name="type"
             rules={[
               {
                 required: true,
@@ -99,27 +102,11 @@ const index = () => {
               },
             ]}
           >
-            <Input
-              defaultValue={data?.[data?.length - 1]?.price_region}
-              type="number"
-              className="border rounded border-blue-500 p-2"
-            />
-          </Form.Item>
-          <Form.Item
-            label="O'zbekiston bo'ylab"
-            name="price_uzb"
-            rules={[
-              {
-                required: true,
-                message: "",
-              },
-            ]}
-          >
-            <Input
-              defaultValue={data?.[data?.length - 1]?.price_uzb}
-              type="number"
-              className="border rounded border-blue-500 p-2"
-            />
+            <Select>
+              <option value="Namangan shahri">Namangan shahri</option>
+              <option value="Namangan viloyati">Namangan viloyati</option>
+              <option value="O'zbekiston bo'ylab">O'zbekiston bo'ylab</option>
+            </Select>
           </Form.Item>
           <Form.Item>
             <Button
@@ -133,44 +120,69 @@ const index = () => {
           </Form.Item>
         </Form>
         <div className="flex flex-col gap-3">
-          <div className="border-b py-3">
-            <div className="flex items-center gap-5">
-              <h4 className="text-lg font-medium">Namangan shahri:</h4>
-              <p className="font-semibold text-blue-700">
-                UZS {data?.[data?.length - 1]?.price_city}
-              </p>
+          {data?.map?.((i, ind) => (
+            <div key={ind} className="border-b py-3 flex items-center gap-5 justify-between">
+              <div>
+                <div className="flex items-center gap-5">
+                  <h4 className="text-lg font-medium">{i?.type}:</h4>
+                  <p className="font-semibold text-blue-700">UZS {i?.price}</p>
+                </div>
+                <div className="flex items-center gap-5">
+                  <h4 className="text-lg font-medium">Tayinlangan sana:</h4>
+                  <p>{i?.created_at?.slice?.(0, 10)}</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <Button
+                  onClick={() => {
+                    setModalData(i);
+                    setIsEditModalOpen(true);
+                  }}
+                  icon={<span className="fa-solid fa-edit" />}
+                />
+                <Button
+                  onClick={() => handleDelete(i?.id)}
+                  danger
+                  icon={<span className="fa-solid fa-trash" />}
+                />
+              </div>
             </div>
-            <div className="flex items-center gap-5">
-              <h4 className="text-lg font-medium">Tayinlangan sana:</h4>
-              <p>{data?.[data?.length - 1]?.created_at?.slice?.(0, 10)}</p>
-            </div>
-          </div>
-          <div className="border-b py-3">
-            <div className="flex items-center gap-5">
-              <h4 className="text-lg font-medium">Namangan viloyati:</h4>
-              <p className="font-semibold text-blue-700">
-                UZS {data?.[data?.length - 1]?.price_region}
-              </p>
-            </div>
-            <div className="flex items-center gap-5">
-              <h4 className="text-lg font-medium">Tayinlangan sana:</h4>
-              <p>{data?.[data?.length - 1]?.created_at?.slice?.(0, 10)}</p>
-            </div>
-          </div>
-          <div className="py-3">
-            <div className="flex items-center gap-5">
-              <h4 className="text-lg font-medium">O'zbekiston bo'ylab:</h4>
-              <p className="font-semibold text-blue-700">
-                UZS {data?.[data?.length - 1]?.price_uzb}
-              </p>
-            </div>
-            <div className="flex items-center gap-5">
-              <h4 className="text-lg font-medium">Tayinlangan sana:</h4>
-              <p>{data?.[data?.length - 1]?.created_at?.slice?.(0, 10)}</p>
-            </div>
-          </div>
+          ))}
         </div>
       </div>
+
+      {/* edit */}
+      <Modal
+        open={isEditModalOpen}
+        destroyOnClose
+        onCancel={() => {
+          setIsEditModalOpen(false);
+          setModalData({});
+        }}
+        title="Tahrirlash"
+        footer={[]}
+      >
+        <Form onFinish={handleEdit} name="edit">
+          <Form.Item label="Narxi" name="price">
+            <Input
+              min={0}
+              defaultValue={modalData?.price}
+              type="number"
+              className="border rounded border-blue-500 p-2"
+            />
+          </Form.Item>
+          <Form.Item>
+            <Button
+              loading={loading}
+              type="primary"
+              className="bg-blue-500"
+              htmlType="submit"
+            >
+              Submit
+            </Button>
+          </Form.Item>
+        </Form>
+      </Modal>
     </div>
   );
 };

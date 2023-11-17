@@ -152,8 +152,6 @@ const index = () => {
 
   async function handleEdit(values) {
     setLoading(true);
-    console.log("p", parentSlug);
-    console.log("", slug);
     let data = new FormData();
     data.append("name", values.name);
     data.append("description", values.description);
