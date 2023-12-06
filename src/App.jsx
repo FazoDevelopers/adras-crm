@@ -12,6 +12,7 @@ import {
   Stock,
   StockProducts,
   Subcategories,
+  Utm,
 } from "./pages";
 import {
   Home as LandingHome,
@@ -59,7 +60,7 @@ const App = () => {
   }
 
   useEffect(() => {
-    let token = localStorage.getItem("adras-token");
+    let token = sessionStorage.getItem("adras-token");
     if (token) setIsLoggedIn(true);
     if (isLoggedIn === false && window.location.pathname.startsWith("/admin")) {
       setAdminBlock(true);
@@ -90,12 +91,12 @@ const App = () => {
               mode="inline"
               defaultSelectedKeys={["1"]}
               items={[
-                // {
-                //   key: "1",
-                //   icon: <span className="fa-solid fa-home" />,
-                //   label: "Bosh sahifa",
-                //   onClick: () => navigate("/admin/"),
-                // },
+                {
+                  key: "1",
+                  icon: <span className="fa-solid fa-home" />,
+                  label: "Bosh sahifa",
+                  onClick: () => navigate("/admin/"),
+                },
                 {
                   key: "2",
                   icon: <span className="fa-solid fa-box" />,
@@ -144,6 +145,12 @@ const App = () => {
                   label: "Yetkazib berish",
                   onClick: () => navigate("/admin/delivery"),
                 },
+                {
+                  key: "10",
+                  icon: <span className="fa-solid fa-globe" />,
+                  label: "UTM source",
+                  onClick: () => navigate("/admin/utm"),
+                },
               ]}
             />
           </Sider>
@@ -175,7 +182,7 @@ const App = () => {
                 type="primary"
                 danger
                 onClick={() => {
-                  localStorage.removeItem("adras-token");
+                  sessionStorage.removeItem("adras-token");
                   window.location.reload();
                 }}
               >
@@ -184,8 +191,7 @@ const App = () => {
             </Header>
             <Content className="p-5">
               <Routes>
-                {/* <Route path="/" element={<Home />} /> */}
-                <Route path="/admin" element={<Categories />} />
+                <Route path="/admin/" element={<Home />} />
                 <Route path="/admin/categories" element={<Categories />} />
                 <Route path="/admin/*" element={<Categories />} />
                 <Route
@@ -198,6 +204,7 @@ const App = () => {
                 <Route path="/admin/stock" element={<Stock />} />
                 <Route path="/admin/orders" element={<Orders />} />
                 <Route path="/admin/delivery" element={<Delivery />} />
+                <Route path="/admin/utm" element={<Utm />} />
               </Routes>
             </Content>
           </Layout>

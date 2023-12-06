@@ -49,7 +49,7 @@ const index = () => {
     if (!values.text) data.delete("text");
     try {
       let response = await axios.post(
-        `/admin/${localStorage.getItem("adras-token")}/main-page-news/store`,
+        `/admin/${sessionStorage.getItem("adras-token")}/main-page-news/store`,
         data
       );
       if (response.status === 201) {
@@ -74,7 +74,7 @@ const index = () => {
     if (!values.text) data.delete("text");
     try {
       let response = await axios.post(
-        `/admin/${localStorage.getItem("adras-token")}/main-page-news/${
+        `/admin/${sessionStorage.getItem("adras-token")}/main-page-news/${
           modalData?.id
         }/update`,
         data
@@ -93,7 +93,7 @@ const index = () => {
   async function handleDelete(id) {
     try {
       let response = await axios.delete(
-        `/admin/${localStorage.getItem(
+        `/admin/${sessionStorage.getItem(
           "adras-token"
         )}/main-page-news/${id}/delete`
       );

@@ -51,7 +51,7 @@ const index = () => {
     data.append("image_2", image2);
     try {
       let response = await axios.post(
-        `/admin/${localStorage.getItem("adras-token")}/parent-category/store`,
+        `/admin/${sessionStorage.getItem("adras-token")}/parent-category/store`,
         data
       );
       if (response.status === 201) {
@@ -79,7 +79,7 @@ const index = () => {
     if (!image2) data.delete("image_2");
     try {
       let response = await axios.post(
-        `/admin/${localStorage.getItem("adras-token")}/parent-category/${
+        `/admin/${sessionStorage.getItem("adras-token")}/parent-category/${
           modalData?.id
         }/update`,
         data
@@ -98,7 +98,7 @@ const index = () => {
   async function handleDelete(id) {
     try {
       let response = await axios.delete(
-        `/admin/${localStorage.getItem("adras-token")}/parent-category/${id}`
+        `/admin/${sessionStorage.getItem("adras-token")}/parent-category/${id}`
       );
       if (response.status === 200) {
         getData();

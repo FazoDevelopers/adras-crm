@@ -8,6 +8,7 @@ import Banner from "./Banner";
 import Stock from "./Stock";
 import Orders from "./Orders";
 import Delivery from "./Delivery";
+import Utm from "./UTM";
 
 export {
   Login,
@@ -20,4 +21,5 @@ export {
   Stock,
   Orders,
   Delivery,
+  Utm,
 };

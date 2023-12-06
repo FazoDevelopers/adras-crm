@@ -52,7 +52,7 @@ const index = () => {
     data.append("time", values.time);
     try {
       let response = await axios.post(
-        `/admin/${localStorage.getItem("adras-token")}/news/store`,
+        `/admin/${sessionStorage.getItem("adras-token")}/news/store`,
         data
       );
       if (response.status === 201) {
@@ -84,7 +84,7 @@ const index = () => {
     if (!values.time) data.delete("time");
     try {
       let response = await axios.post(
-        `/admin/${localStorage.getItem("adras-token")}/news/${
+        `/admin/${sessionStorage.getItem("adras-token")}/news/${
           modalData?.id
         }/update`,
         data
@@ -103,7 +103,7 @@ const index = () => {
   async function handleDelete(id) {
     try {
       let response = await axios.delete(
-        `/admin/${localStorage.getItem("adras-token")}/news/${id}`
+        `/admin/${sessionStorage.getItem("adras-token")}/news/${id}`
       );
       if (response.status === 200) {
         getData();

@@ -119,7 +119,7 @@ const index = () => {
     if (!slug) data.delete("sub_category");
     try {
       let response = await axios.post(
-        `/admin/${localStorage.getItem("adras-token")}/products/store`,
+        `/admin/${sessionStorage.getItem("adras-token")}/products/store`,
         data
       );
       if (response.status === 200) {
@@ -175,7 +175,7 @@ const index = () => {
     if (!values.shipping_price) data.delete("shipping_price");
     try {
       let response = await axios.post(
-        `/admin/${localStorage.getItem("adras-token")}/products/${
+        `/admin/${sessionStorage.getItem("adras-token")}/products/${
           modalData?.id
         }/update`,
         data
@@ -196,7 +196,7 @@ const index = () => {
   async function handleDelete(id) {
     try {
       let response = await axios.delete(
-        `/admin/${localStorage.getItem("adras-token")}/products/${id}`
+        `/admin/${sessionStorage.getItem("adras-token")}/products/${id}`
       );
       if (response.status === 200) {
         getData();
@@ -218,7 +218,7 @@ const index = () => {
     if (!values.oldPrice) data.delete("oldPrice");
     try {
       let response = await axios.post(
-        `/admin/${localStorage.getItem("adras-token")}/product-type/store`,
+        `/admin/${sessionStorage.getItem("adras-token")}/product-type/store`,
         data
       );
       if (response.status === 200) {
@@ -251,7 +251,7 @@ const index = () => {
   async function handleDeleteVariant(id) {
     try {
       let response = await axios.delete(
-        `/admin/${localStorage.getItem("adras-token")}/product-type/delete/${id}`
+        `/admin/${sessionStorage.getItem("adras-token")}/product-type/delete/${id}`
       );
       if (response.status === 200) {
         getData();

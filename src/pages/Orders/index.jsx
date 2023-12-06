@@ -36,7 +36,7 @@ const index = () => {
   async function getData() {
     try {
       let order = await axios.get(
-        `/admin/${localStorage.getItem("adras-token")}/order/get`
+        `/admin/${sessionStorage.getItem("adras-token")}/order/get`
       );
       setData(order?.data?.data);
       let delivery = await axios.get("/get-shipping-price");
@@ -72,7 +72,7 @@ const index = () => {
 
     try {
       let response = await axios.post(
-        `/${localStorage.getItem("adras-token")}/get-pdf`,
+        `/${sessionStorage.getItem("adras-token")}/get-pdf`,
         data
       );
       if (response.status === 200) {
@@ -144,7 +144,7 @@ const index = () => {
     if (!values.amount) delete data.amount;
     try {
       let response = await axios.post(
-        `/admin/${localStorage.getItem("adras-token")}/order/${
+        `/admin/${sessionStorage.getItem("adras-token")}/order/${
           modalData?.id
         }/update`,
         data
@@ -162,7 +162,7 @@ const index = () => {
   async function handleDelete(id) {
     try {
       let response = await axios.delete(
-        `/admin/${localStorage.getItem("adras-token")}/order/${id}/delete`
+        `/admin/${sessionStorage.getItem("adras-token")}/order/${id}/delete`
       );
       if (response.status === 200) {
         getData();

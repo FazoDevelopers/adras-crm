@@ -7,7 +7,7 @@ const App = () => {
     try {
       let response = await axios.post("admin/login", values);
       if (response.status === 200) {
-        localStorage.setItem(
+        sessionStorage.setItem(
           "adras-token",
           response?.data?.data?.remember_token
         );
@@ -22,7 +22,7 @@ const App = () => {
   return (
     <div className="absolute inset-0 grid place-items-center">
       {contextHolder}
-      <div className="w-11/12 md:w-1/2">
+      <div className="w-11/12 md:w-1/3">
         <Form name="basic" onFinish={onFinish} autoComplete="off">
           <Form.Item
             label="Username"
