@@ -1,6 +1,12 @@
 import { useEffect, useState } from "react";
 import { Layout, Menu, Button, theme } from "antd";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import {
+  Route,
+  Routes,
+  useLocation,
+  useNavigate,
+  useSearchParams,
+} from "react-router-dom";
 import {
   Banner,
   Categories,
@@ -36,8 +42,10 @@ const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
   const [adminBlock, setAdminBlock] = useState(false);
+  const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const location = useLocation();
   const {
     token: { colorBgContainer },
   } = theme.useToken();
@@ -62,17 +70,23 @@ const App = () => {
   useEffect(() => {
     let token = sessionStorage.getItem("adras-token");
     if (token) setIsLoggedIn(true);
-    if (isLoggedIn === false && window.location.pathname.startsWith("/admin")) {
+    if (isLoggedIn === false && location.pathname.startsWith("/admin")) {
       setAdminBlock(true);
     } else {
       setAdminBlock(false);
     }
-    if (window.location.pathname.startsWith("/admin") === false) {
-      getAllDataForLanding();
-    } else {
+    if (location.pathname.startsWith("/admin") === false) {
       getAllDataForLanding();
     }
-  }, [window.location.pathname, adminBlock]);
+  }, [location.pathname, adminBlock]);
+
+  useEffect(() => {
+    if (searchParams.get("utm_source")) {
+      axios
+        .post(`/utm-source/${searchParams.get("utm_source")}/addCount`)
+        .catch(() => false);
+    }
+  }, []);
 
   if (adminBlock) {
     return <Login />;
