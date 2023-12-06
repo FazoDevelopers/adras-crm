@@ -1,13 +1,14 @@
-import { Button, Form, Input } from "antd";
-import { Link } from "react-router-dom";
 import axios from "axios";
-import { useRef, useEffect, useState } from "react";
 import Card from "../Card";
+import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Button, Form, Modal, Select } from "antd";
+import { PRODUCT_NAMES } from "../../constants";
 
 const index = () => {
-  const searchModal = useRef();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
 
   const googleTranslateElementInit = () => {
     new window.google.translate.TranslateElement(
@@ -65,23 +66,36 @@ const index = () => {
             type="primary"
             className="bg-blue-500 w-8"
             icon={<span className="fa-solid fa-search w-8" />}
-            onClick={() => searchModal.current.showModal()}
+            onClick={() => setIsSearchModalOpen(true)}
           />
           <div id="google_translate_element" className="border"></div>
         </div>
       </div>
-      <dialog ref={searchModal} className="z-10 w-screen h-screen p-3 rounded-lg">
+      <Modal
+        width={"100%"}
+        destroyOnClose
+        footer={[]}
+        onCancel={() => setIsSearchModalOpen(false)}
+        open={isSearchModalOpen}
+        className="z-10 p-3 rounded-lg"
+        title="Mahsulotlarni izlash"
+      >
         <Form onFinish={handleSearch}>
-          <div className="w-full flex items-center justify-between">
-            <h2>Mahsulorlarni izlash:</h2>
-            <Button
-              type="outline"
-              icon={<span className="fa-solid fa-x" />}
-              onClick={() => searchModal.current.close()}
-            />
-          </div>
           <Form.Item name="q" required>
-            <Input type="text" />
+            <Select
+              showSearch
+              placeholder="Mahsulot nomi"
+              optionFilterProp="children"
+              filterOption={(input, option) =>
+                (option?.label ?? "")
+                  .toLowerCase()
+                  .includes(input.toLowerCase())
+              }
+              options={PRODUCT_NAMES.map((item) => ({
+                value: item.name,
+                label: item.name,
+              }))}
+            />
           </Form.Item>
           <Form.Item>
             <Button
@@ -106,7 +120,7 @@ const index = () => {
             </h3>
           )}
         </div>
-      </dialog>
+      </Modal>
     </nav>
   );
 };
