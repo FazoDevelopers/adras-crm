@@ -131,6 +131,7 @@ const index = ({ data }) => {
       </div>
       {/* see */}
       <Modal
+      width={700}
         title="Mahsulot"
         open={isModalOpen}
         onCancel={() => setIsModalOpen(false)}
@@ -154,37 +155,37 @@ const index = ({ data }) => {
           </thead>
           <tbody>
             <tr>
-              <th className="py-3">Nomi:</th>
+              <th className="py-3 whitespace-nowrap pr-2">Nomi:</th>
               <td>{modalData?.name}</td>
             </tr>
             <tr>
-              <th className="py-3">SKU:</th>
+              <th className="py-3 whitespace-nowrap pr-2">SKU:</th>
               <td>{modalData?.sku}</td>
             </tr>
             <tr>
-              <th className="py-3">Qiymati:</th>
+              <th className="py-3 whitespace-nowrap pr-2">Qiymati:</th>
               <td>{modalData?.amount}</td>
             </tr>
             <tr>
-              <th className="py-3">O'lchov birligi:</th>
+              <th className="py-3 whitespace-nowrap pr-2">O'lchov birligi:</th>
               <td>{modalData?.type}</td>
             </tr>
             <tr>
-              <th className="py-3">Tafsiloti:</th>
+              <th className="py-3 whitespace-nowrap pr-2">Tafsiloti:</th>
               <td>{modalData?.description}</td>
             </tr>
             <tr>
-              <th className="py-3">Narxi:</th>
-              <td>{modalData?.price}</td>
+              <th className="py-3 whitespace-nowrap pr-2">Narxi:</th>
+              <td>UZS {modalData?.price}</td>
             </tr>
             {modalData?.shipping_price && (
               <tr>
-                <th className="py-3">Eski narxi:</th>
-                <td>{modalData?.shipping_price}</td>
+                <th className="py-3 whitespace-nowrap pr-2">Eski narxi:</th>
+                <td>UZS {modalData?.shipping_price}</td>
               </tr>
             )}
             <tr>
-              <th className="py-3">Yaratilgan sana:</th>
+              <th className="py-3 whitespace-nowrap pr-2">Yaratilgan sana:</th>
               <td>{modalData?.created_at?.slice(0, 10)}</td>
             </tr>
           </tbody>
