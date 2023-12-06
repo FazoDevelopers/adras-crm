@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Tabs, Timeline } from "antd";
+import { Empty, Tabs, Timeline } from "antd";
 import { useEffect, useState } from "react";
 
 const index = () => {
@@ -11,62 +11,122 @@ const index = () => {
   const orderItems = [
     {
       key: "week",
-      label: `Bu oy (${data?.orders?.last_week?.length ?? 0})`,
+      label: `Bu hafta (${data?.orders?.last_week?.length ?? 0})`,
       children: (
-        <table className="w-full text-center">
-          <thead>
-            <tr className="border">
-              <td className="border p-2">#</td>
-              <th className="border">Mijoz</th>
-              <th className="border">Tel. raqam</th>
-              <th className="border">Manzil</th>
-              <th className="border">Mahsulotlar soni</th>
-              <th className="border">Buyurtma sanasi</th>
-            </tr>
-          </thead>
-          <tbody>
-            {data?.orders?.last_week?.map?.((order, ind) => (
-              <tr className="border">
-                <th className="border p-2">{ind + 1}</th>
-                <td className="border">{order?.name}</td>
-                <td className="border">+998 {order?.phone}</td>
-                <td className="border">{order?.location}</td>
-                <td className="border">{JSON.parse(order?.orders)?.length}</td>
-                <td className="border">{order?.created_at?.slice?.(0, 10)}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <>
+          {data?.orders?.last_week?.length > 0 ? (
+            <table className="w-full text-center">
+              <thead>
+                <tr className="border">
+                  <td className="border p-2">#</td>
+                  <th className="border">Mijoz</th>
+                  <th className="border">Tel. raqam</th>
+                  <th className="border">Manzil</th>
+                  <th className="border">Mahsulotlar soni</th>
+                  <th className="border">Buyurtma sanasi</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data?.orders?.last_week?.map?.((order, ind) => (
+                  <tr className="border">
+                    <th className="border p-2">{ind + 1}</th>
+                    <td className="border">{order?.name}</td>
+                    <td className="border">+998 {order?.phone}</td>
+                    <td className="border">{order?.location}</td>
+                    <td className="border">
+                      {JSON.parse(order?.orders)?.length}
+                    </td>
+                    <td className="border">
+                      {order?.created_at?.slice?.(0, 10)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <Empty description="Ma'lumotlar yo'q." />
+          )}
+        </>
       ),
     },
     {
       key: "month",
       label: `Bu oy (${data?.orders?.last_month?.length ?? 0})`,
       children: (
-        <table className="w-full text-center">
-          <thead>
-            <tr className="border">
-              <td className="border p-2">#</td>
-              <th className="border">Mijoz</th>
-              <th className="border">Tel. raqam</th>
-              <th className="border">Manzil</th>
-              <th className="border">Mahsulotlar soni</th>
-              <th className="border">Buyurtma sanasi</th>
-            </tr>
-          </thead>
-          <tbody>
-            {data?.orders?.last_month?.map?.((order, ind) => (
-              <tr className="border">
-                <th className="border p-2">{ind + 1}</th>
-                <td className="border">{order?.name}</td>
-                <td className="border">+998 {order?.phone}</td>
-                <td className="border">{order?.location}</td>
-                <td className="border">{JSON.parse(order?.orders)?.length}</td>
-                <td className="border">{order?.created_at?.slice?.(0, 10)}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <>
+          {data?.orders?.last_month?.length > 0 ? (
+            <table className="w-full text-center">
+              <thead>
+                <tr className="border">
+                  <td className="border p-2">#</td>
+                  <th className="border">Mijoz</th>
+                  <th className="border">Tel. raqam</th>
+                  <th className="border">Manzil</th>
+                  <th className="border">Mahsulotlar soni</th>
+                  <th className="border">Buyurtma sanasi</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data?.orders?.last_month?.map?.((order, ind) => (
+                  <tr className="border">
+                    <th className="border p-2">{ind + 1}</th>
+                    <td className="border">{order?.name}</td>
+                    <td className="border">+998 {order?.phone}</td>
+                    <td className="border">{order?.location}</td>
+                    <td className="border">
+                      {JSON.parse(order?.orders)?.length}
+                    </td>
+                    <td className="border">
+                      {order?.created_at?.slice?.(0, 10)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <Empty description="Ma'lumotlar yo'q." />
+          )}
+        </>
+      ),
+    },
+    {
+      key: "all",
+      label: `Barchasi (${data?.orders?.all?.length ?? 0})`,
+      children: (
+        <>
+          {data?.orders?.all?.length > 0 ? (
+            <table className="w-full text-center">
+              <thead>
+                <tr className="border">
+                  <td className="border p-2">#</td>
+                  <th className="border">Mijoz</th>
+                  <th className="border">Tel. raqam</th>
+                  <th className="border">Manzil</th>
+                  <th className="border">Mahsulotlar soni</th>
+                  <th className="border">Buyurtma sanasi</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data?.orders?.all?.map?.((order, ind) => (
+                  <tr className="border">
+                    <th className="border p-2">{ind + 1}</th>
+                    <td className="border">{order?.name}</td>
+                    <td className="border">+998 {order?.phone}</td>
+                    <td className="border">{order?.location}</td>
+                    <td className="border">
+                      {JSON.parse(order?.orders)?.length}
+                    </td>
+                    <td className="border">
+                      {order?.created_at?.slice?.(0, 10)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <Empty description="Ma'lumotlar yo'q." />
+          )}
+        </>
       ),
     },
   ];
@@ -103,38 +163,28 @@ const index = () => {
       </div>
       <div>
         <h2 className="text-2xl font-medium mb-2">Top xaridorlar:</h2>
-        <Timeline className="ml-3">
-          {data?.top_clients?.map?.((c, ind) => {
-            return (
-              <Timeline.Item
-                dot={
-                  <span
-                    className={`border ${
-                      ind === 0
-                        ? "border-green-500 text-green-500"
-                        : ind === 1
-                        ? "border-blue-500"
-                        : ind === 2
-                        ? "border-red-500 text-red-500"
-                        : "border-gray-500 text-black"
-                    } px-2`}
-                  >
-                    {ind + 1}
-                  </span>
-                }
-                children={
-                  <div className="">
-                    <h4 className="text-lg font-medium">{c?.name}</h4>
-                    <span className="flex gap-3">
-                      <p>Xaridlar soni:</p>
-                      <p className="font-medium">{c?.name_count}</p>
-                    </span>
-                  </div>
-                }
-              />
-            );
-          })}
-        </Timeline>
+        {data?.top_clients?.length > 0 ? (
+          <table className="w-full text-center">
+            <thead>
+              <tr className="border">
+                <td className="border p-2">#</td>
+                <th className="border">Mijoz</th>
+                <th className="border">Xaridlar soni</th>
+              </tr>
+            </thead>
+            <tbody>
+              {data?.top_clients?.map?.((order, ind) => (
+                <tr className="border">
+                  <th className="border p-2">{ind + 1}</th>
+                  <td className="border">{order?.name}</td>
+                  <td className="border">{order?.name_count}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          <Empty description="Ma'lumotlar yo'q." />
+        )}
       </div>
     </div>
   );
